@@ -35,8 +35,15 @@
             <ion-label position="floating">Contraseña</ion-label>
             <ion-input type="password" formControlName="contrasena"></ion-input>
           </ion-item>
-          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid">Ingresar</ion-button>
-          <ion-button fill="clear" (click)="goToRegistro()">¿No tienes cuenta? Regístrate</ion-button>
+
+          <ion-button color="tertiary" size="default" fill="solid" type="submit" [disabled]="!loginForm.valid">
+            Ingresar
+          </ion-button>
+
+          <ion-button color="secondary" size="default" fill="solid" (click)="goToRegistro()">
+            ¿No tienes cuenta? Regístrate
+          </ion-button>
+
         </form>
       </ion-card-content>
     </ion-card>

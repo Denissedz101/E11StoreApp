@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { TopMenuModule } from '../components/top-menu/top-menu.module';
 import { IonicModule } from '@ionic/angular';
 
 import { ContactoPageRoutingModule } from './contacto-routing.module';
@@ -13,6 +13,7 @@ import { ContactoPage } from './contacto.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    TopMenuModule,
     ContactoPageRoutingModule
   ],
   declarations: [ContactoPage]

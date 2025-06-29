@@ -3,7 +3,7 @@
     <div class="logo-container">
       <img src="assets/logo-tiendaRLL.png" alt="E11evenStore" class="logo-header" />
     </div>
-    <app-top-menu></app-top-menu>
+    <app-top-menu></app-top-menu> <!-- para usarlo importar a module.ts de c/page-->
     <ion-button fill="clear" color="danger" shape="round" (click)="cerrarSesion()" style="margin-right: 10px;">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
       Cerrar sesión
@@ -50,7 +50,10 @@
           <ion-item *ngFor="let noticia of noticias" lines="full">
             <ion-label>
               <h3>{{ noticia.title }}</h3>
-              <p>{{ noticia.body }}</p>
+              <p>{{ noticia.resumen }}</p>
+              <ion-button size="small" fill="clear" (click)="abrirNoticia(noticia.link)">
+               Leer más
+              </ion-button>
             </ion-label>
           </ion-item>
         </ion-list>

@@ -1,0 +1,71 @@
+.perfil-background {
+  --background: linear-gradient(to right, #6a0dad, #000000) !important;
+  padding: 1rem;
+}
+
+.header-toolbar {
+  --background: #0f0f0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-header {
+  height: 80px;
+  object-fit: contain; 
+}
+
+.header-gradient {
+  --background: transparent !important;
+  background: linear-gradient(to right, #6a0dad, #000000) !important;
+}
+
+
+.section-title {
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+// Estilos para los inputs
+ion-input {
+  --background: rgba(255, 255, 255, 0.5); 
+  --color: #000; 
+  --placeholder-color: #999; 
+}
+
+// Inputs de edición con borde
+ion-item {
+  --border-color: #6a1b9a; 
+  --highlight-border-color: #6a1b9a; 
+}
+
+// Botón de "Cerrar sesión"
+ion-button[color='danger'] {
+  background: #d32f2f;
+  border-radius: 50px; 
+}
+
+// Botones de editar y guardar
+ion-button {
+  border-radius: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+ion-button[color='success'] {
+  background: #388e3c; // Verde para el botón de guardar
+}
+
+ion-button[color='medium'] {
+  background: #8e8e8e; // Gris para el botón de cancelar
+}

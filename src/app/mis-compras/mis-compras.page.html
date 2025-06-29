@@ -1,13 +1,42 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>mis-compras</ion-title>
+    <ion-title>Mis Compras</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+  <ion-list *ngIf="carrito.length > 0; else emptyCart">
+    <ion-item *ngFor="let item of carrito">
+      <ion-label>
+        <h2 [innerHTML]="item.titulo"></h2>
+        <p>Precio: ${{ item.precio }}</p>
+      </ion-label>
+      <ion-button color="danger" slot="end" (click)="eliminarItem(item.id)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <h2>Total:</h2>
+      </ion-label>
+      <ion-note slot="end" color="primary" style="font-weight: bold;">
+        ${{ total }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #emptyCart>
+    <ion-item>
+      <ion-label>No tienes juegos en el carrito.</ion-label>
+    </ion-item>
+  </ng-template>
+
+  <ion-footer>
     <ion-toolbar>
-      <ion-title size="large">mis-compras</ion-title>
+      <ion-button expand="full" (click)="finalizarCompra()" [disabled]="carrito.length === 0">
+        Finalizar Compra
+      </ion-button>
     </ion-toolbar>
-  </ion-header>
+  </ion-footer>
 </ion-content>

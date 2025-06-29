@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { SqliteService } from './services/sqlite-db.service';
-//instalar sqlite por CLI
+import { Component, OnInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { UserDataService } from './services/user-data.service';
 
 @Component({
   selector: 'app-root',
@@ -8,21 +8,15 @@ import { SqliteService } from './services/sqlite-db.service';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-  
-export class AppComponent {
-  constructor(private sqliteService: SqliteService) { }
-  
-    ngOnInit() {
-    this.sqliteService.init(); // Llamar a init()
+export class AppComponent implements OnInit {
+  constructor(
+    private platform: Platform,
+    private userDataService: UserDataService
+  ) {}
 
-    this.sqliteService.dbReady.subscribe((ready: boolean) => {
-      if (ready) {
-        console.log('✅ SQLite inicializado');
-      }
-    });
-
+  async ngOnInit() {
+    await this.platform.ready();
+    await this.userDataService.init();
+    console.log('☑ App inicializada y storage listo');
   }
-
-
-
 }

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, NavController } from '@ionic/angular';
-import { SqliteService } from '../services/sqlite-db.service';
-import { StorageService } from '../services/storage.service';
-import { firstValueFrom } from 'rxjs';
+import { AlertController } from '@ionic/angular';
+import { SessionService } from '../services/session.service';
+import { UserDataService } from '../services/user-data.service';
 
 @Component({
   selector: 'app-login',
@@ -17,10 +16,9 @@ export class LoginPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private sqliteService: SqliteService, 
-    private storageService: StorageService,
+    private userDataService: UserDataService,
+    private sessionService: SessionService,
     public router: Router,
-    private navCtrl: NavController,
     private alertCtrl: AlertController
   ) {}
 
@@ -31,7 +29,6 @@ export class LoginPage implements OnInit {
     });
   }
 
-  // Mostrar alerta
   async mostrarAlerta(mensaje: string) {
     const alert = await this.alertCtrl.create({
       header: 'Atención',
@@ -41,45 +38,32 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Método para redirigir al formulario de registro
   goToRegistro() {
-  if (this.router.url !== '/registro') {
-    this.router.navigateByUrl('/registro');
-
+    if (this.router.url !== '/registro') {
+      this.router.navigateByUrl('/registro');
+    }
   }
-}
 
-
-  // Iniciar sesión
   async onLogin() {
     if (this.loginForm.valid) {
       const { correo, contrasena } = this.loginForm.value;
 
-      // 🔐 Esperar a que la base de datos esté lista
-      const dbEstaLista = await firstValueFrom(this.sqliteService.dbReady); 
-      if (!dbEstaLista) {
-        await this.mostrarAlerta('La base de datos aún no está lista. Intenta en unos segundos.');
-        return;
-      }
-
       try {
-        const user = await this.sqliteService.getUserByCredentials(correo, contrasena);
+        const user = await this.userDataService.getUserByCredentials(correo, contrasena);
 
         if (user) {
-          await this.storageService.setItem('usuarioActivo', user);
+          await this.sessionService.setActiveUser(user);
           console.log('✅ Inicio de sesión exitoso:', user);
           this.router.navigate(['/home']);
         } else {
           this.mostrarAlerta('Credenciales incorrectas ❌');
         }
-
       } catch (error) {
-        console.error('❌ Error al intentar iniciar sesión:', error);
+        console.error('❌ Error al iniciar sesión:', error);
         this.mostrarAlerta('Ocurrió un error al iniciar sesión. Intenta nuevamente.');
       }
     } else {
       this.mostrarAlerta('Completa todos los campos requeridos.');
     }
   }
-
 }

@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage-angular';//instalar @ionic/storage-angular
 import { HttpClientModule } from '@angular/common/http';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -14,8 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    IonicStorageModule.forRoot({ name: 'e11ven_db', driverOrder: ['indexeddb', 'localstorage']})
-    ],
+    IonicStorageModule.forRoot()],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA],
