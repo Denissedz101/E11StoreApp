@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, NavController } from '@ionic/angular';
 import { SqliteService } from '../services/sqlite-db.service';
 import { StorageService } from '../services/storage.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +56,7 @@ export class LoginPage implements OnInit {
       const { correo, contrasena } = this.loginForm.value;
 
       // 🔐 Esperar a que la base de datos esté lista
-      const dbEstaLista = await this.sqliteService.dbReady.toPromise();
+      const dbEstaLista = await firstValueFrom(this.sqliteService.dbReady); 
       if (!dbEstaLista) {
         await this.mostrarAlerta('La base de datos aún no está lista. Intenta en unos segundos.');
         return;

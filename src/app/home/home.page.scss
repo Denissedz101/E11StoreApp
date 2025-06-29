@@ -3,11 +3,24 @@
   padding: 1rem;
 }
 
-/**** logo-head ***/
+.header-toolbar {
+  --background: #0f0f0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .logo-header {
-  width: 220px;
-  margin: auto;
-  padding: 10px 0;
+  height: 80px;
+  object-fit: contain; // evita que se vea estirado o "chato"
 }
 
 .header-gradient {
