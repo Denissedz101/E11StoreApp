@@ -1,0 +1,7 @@
+{
+  "name": "e11ven-Store2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
