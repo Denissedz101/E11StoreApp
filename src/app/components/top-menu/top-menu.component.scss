@@ -1,0 +1,16 @@
+.top-toolbar {
+  --background: #0f0f0f !important;
+  --color: #a94caf;
+  padding-top: 10px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+ion-segment-button {
+  --background: #0f0f0f !important;
+  --color: #a94caf;
+}
+
+ion-segment-button.activated {
+  --color: #e080f0;
+}

@@ -1,0 +1,26 @@
+<ion-toolbar color="light" class="top-toolbar">
+  <ion-segment scrollable value="home">
+    <ion-segment-button (click)="goTo('/home')" layout="icon-top">
+      <ion-icon name="home-outline"></ion-icon>
+    </ion-segment-button>
+
+    <ion-segment-button (click)="goTo('/geolocalizacion')" layout="icon-top">
+      <ion-icon name="location-outline"></ion-icon>
+    </ion-segment-button>
+
+    <ion-segment-button (click)="goTo('/contacto')" layout="icon-top">
+      <ion-icon name="chatbox-outline"></ion-icon>
+    </ion-segment-button>
+
+    <ion-segment-button (click)="goTo('/mi-perfil')" layout="icon-top">
+      <ion-icon name="person-circle-outline"></ion-icon>
+    </ion-segment-button>
+
+    <ion-segment-button (click)="goTo('/mis-compras')" layout="icon-top">
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-segment-button>
+
+   
+
+  </ion-segment>
+</ion-toolbar>

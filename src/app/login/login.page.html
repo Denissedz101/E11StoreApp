@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="ion-text-center">E11evenStore:::Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-content" fullscreen>
+
+  <!-- Fondo animado -->
+  <div class="background-animation">
+    <lottie-player
+      src="assets/fondo-login.json"
+      background="transparent"
+      speed="1"
+      loop
+      autoplay>
+    </lottie-player>
+  </div>
+
+  <div class="logo-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Accede a tu Cuenta</ion-card-title>
+        <ion-card-subtitle>Ingresa tu correo y contraseña</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+          <ion-item>
+            <ion-label position="floating">Correo</ion-label>
+            <ion-input type="email" formControlName="correo"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" formControlName="contrasena"></ion-input>
+          </ion-item>
+          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid">Ingresar</ion-button>
+          <ion-button fill="clear" (click)="goToRegistro()">¿No tienes cuenta? Regístrate</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
