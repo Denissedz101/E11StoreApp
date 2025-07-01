@@ -43,6 +43,10 @@ const routes: Routes = [
     path: '**',
     loadChildren: () => import('./not-found/not-found.module').then(m => m.NotFoundPageModule)
   },
+  {
+    path: 'geolocalizacion',
+    loadChildren: () => import('./geolocalizacion/geolocalizacion.module').then( m => m.GeolocalizacionPageModule)
+  },
 ];
 
 @NgModule({

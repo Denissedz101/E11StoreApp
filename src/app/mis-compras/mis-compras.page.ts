@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../services/session.service';
-import { UserDataService } from '../services/user-data.service';
 import { AlertController, NavController } from '@ionic/angular';
+import { SqliteService } from '../services/sqlite-db.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-mis-compras',
@@ -16,23 +16,29 @@ export class MisComprasPage implements OnInit {
 
   constructor(
     private sessionService: SessionService,
-    private userDataService: UserDataService,
+    private sqliteService: SqliteService,
     private alertCtrl: AlertController,
     private navCtrl: NavController
   ) {}
 
   async ngOnInit() {
     this.usuarioActivo = await this.sessionService.getActiveUser();
+
     if (!this.usuarioActivo) {
       this.navCtrl.navigateRoot('/login');
       return;
     }
+
     await this.cargarCarrito();
   }
 
   async cargarCarrito() {
-    this.carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
-    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+    try {
+      this.carrito = await this.sqliteService.getCart(this.usuarioActivo.id);
+      this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+    } catch (error) {
+      console.error('Error al cargar carrito:', error);
+    }
   }
 
   async eliminarItem(itemId: number) {
@@ -44,13 +50,13 @@ export class MisComprasPage implements OnInit {
         {
           text: 'Eliminar',
           handler: async () => {
-            // Aquí removemos solo el item indicado del carrito del usuario
-            await this.userDataService.removeFromCart(this.usuarioActivo.id.toString(), itemId);
+            await this.sqliteService.removeFromCart(itemId);
             await this.cargarCarrito();
           },
         },
       ],
     });
+
     await alert.present();
   }
 
@@ -65,15 +71,31 @@ export class MisComprasPage implements OnInit {
       return;
     }
 
-    const alert = await this.alertCtrl.create({
-      header: 'Compra simulada',
-      message: `Compra simulada por $${this.total}. ¡Gracias por su compra!`,
-      buttons: ['OK'],
-    });
-    await alert.present();
+    const codigo = 'ORD-' + Date.now();
 
-    // Limpiamos el carrito después de la compra simulada
-    await this.userDataService.clearCart(this.usuarioActivo.id.toString());
-    await this.cargarCarrito();
+    try {
+      await this.sqliteService.saveTransaction(
+        this.usuarioActivo.id,
+        codigo,
+        this.carrito
+      );
+
+      const alert = await this.alertCtrl.create({
+        header: 'Compra simulada',
+        message: `Compra registrada por $${this.total}. Código: ${codigo}`,
+        buttons: ['OK'],
+      });
+      await alert.present();
+
+      await this.cargarCarrito();
+    } catch (error) {
+      console.error('Error al guardar transacción:', error);
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'No se pudo completar la compra.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+    }
   }
 }

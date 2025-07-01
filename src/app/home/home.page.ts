@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class HomePage implements OnInit {
   usuarioActivo: any = null;
   saludo: string = '';
+  cantidadCarrito: number = 0;
 
   juegos = [
     {
@@ -63,7 +64,7 @@ export class HomePage implements OnInit {
       this.usuarioActivo.nombre ||
       this.usuarioActivo.username ||
       this.usuarioActivo.correo;
-    this.saludo = `Hola, ${nombre} 👋`;
+      this.saludo = `Hola, ${nombre} 👋`;
     console.log('🔐 Sesión iniciada como:', nombre);
 
     this.cargarNoticias();
@@ -81,12 +82,15 @@ export class HomePage implements OnInit {
   }
 
   //simulamos compra en app
-  async agregarAlCarrito(juego: any) {
+ async agregarAlCarrito(juego: any) {
+  if (!this.usuarioActivo || !this.usuarioActivo.id) return;
+
   try {
     await this.userDataService.addToCart(this.usuarioActivo.id.toString(), juego);
+    this.cantidadCarrito++;
     const alert = await this.alertController.create({
       header: 'Carrito',
-      message: `El juego <strong>${juego.titulo}</strong> fue agregado al carrito (simulación).`,
+      message: `Juego <strong>${juego.titulo}</strong> agregado.`,
       buttons: ['OK'],
     });
     await alert.present();
@@ -94,6 +98,20 @@ export class HomePage implements OnInit {
     console.error('Error al agregar al carrito:', error);
   }
 }
+
+async contarCarrito() {
+  try {
+    const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
+    this.cantidadCarrito = carrito.length;
+  } catch (error) {
+    console.error('Error al contar el carrito:', error);
+  }
+}
+
+irAlCarrito() {
+  this.router.navigate(['/mis-compras']);
+}
+
 
   async cerrarSesion() {
     const alert = await this.alertController.create({

@@ -1,26 +1,20 @@
-<ion-header>
-  <ion-toolbar class="header-toolbar">
-    <div class="logo-container">
-      <img src="assets/logo-tiendaRLL.png" alt="E11evenStore" class="logo-header" />
-    </div>
-    <app-top-menu></app-top-menu> <!-- para usarlo importar a module.ts de c/page-->
-    <ion-button fill="clear" size="small" color="danger" (click)="cerrarSesion()" style="margin-right: 10px;">
-      Cerrar sesión
-    </ion-button>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true" class="contact-background">
   <ion-card>
+    <ion-button fill="clear" class="camera-button" (click)="tomarFoto()">
+      <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+    </ion-button>
+
     <ion-card-header>
-      <ion-card-title>¡Contáctanos!</ion-card-title>
+      <ion-card-title>
+        ¡Contáctanos! | Si quieres un juego pídelo y lo traemos 🪄
+      </ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
       <ion-textarea
         [(ngModel)]="mensaje"
-        placeholder="Escribe tu mensaje (máx. 500 caracteres)"
-        maxlength="500"
+        placeholder="Escribe tu mensaje (máx. 100 caracteres) o adjunta una foto"
+        maxlength="100"
         rows="6">
       </ion-textarea>
       <ion-button expand="block" (click)="enviar()" [disabled]="mensaje.trim().length === 0">Enviar</ion-button>

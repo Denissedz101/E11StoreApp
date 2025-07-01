@@ -3,6 +3,7 @@ import { AlertController, NavController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
 import { Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-contacto',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ContactoPage {
   mensaje: string = '';
+  fotoBase64: string | null = null;
 
   constructor(
     private alertCtrl: AlertController,
@@ -21,6 +23,27 @@ export class ContactoPage {
     private router: Router,
     private navCtrl: NavController,
   ) { }
+
+// ********* METODOS **************** //
+  async tomarFoto() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 80,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+      });
+      this.fotoBase64 = image.base64String!;
+      const alert = await this.alertCtrl.create({
+        header: 'Foto capturada',
+        message: 'Imagen añadida al mensaje correctamente.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    } catch (error) {
+      console.error('Error al capturar foto', error);
+    }
+  }
 
   async enviar() {
     const alert = await this.alertCtrl.create({

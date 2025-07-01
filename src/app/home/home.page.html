@@ -62,7 +62,14 @@
           <p style="color: white; text-align: center;">No hay noticias disponibles.</p>
         </ng-template>
 
-
-
+        <!-- btn flotante carrito -->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button (click)="irAlCarrito()">
+            <ion-icon name="cart-outline"></ion-icon>
+          </ion-fab-button>
+          <ion-badge *ngIf="cantidadCarrito > 0" color="danger" style="position: absolute; top: -5px; right: -5px;">
+            {{ cantidadCarrito }}
+          </ion-badge>
+        </ion-fab>
 
 </ion-content>

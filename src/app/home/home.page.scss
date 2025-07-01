@@ -4,12 +4,14 @@
 }
 
 .header-toolbar {
-  --background: #0f0f0f;
+  background: linear-gradient(to right, #001f3f, #000000); 
+  color: white;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 10px;
 }
+
 
 .logo-container {
   display: flex;
@@ -23,18 +25,21 @@
   object-fit: contain; // evita que se vea estirado o "chato"
 }
 
+/*
 .header-gradient {
   --background: transparent !important;
   background: linear-gradient(to right, #6a0dad, #000000) !important;
 }
-
+*/
 
 .section-title {
-  color: white;
+  color: #ffffff;
   text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 2rem; 
+  margin-top: 20px;
 }
+
 
 ion-list ion-item {
   color: white;
@@ -42,7 +47,7 @@ ion-list ion-item {
 
 
 ion-card {
-  background-color: #1c1c1e;
+  //background-color: #1c1c1e;
   color: white;
   border-radius: 10px;
 }
