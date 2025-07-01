@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { SqliteService } from './sqlite-db.service';
 import { StorageService } from './storage.service';
 
@@ -13,108 +13,192 @@ export class UserDataService {
   constructor(
     private platform: Platform,
     public sqliteService: SqliteService,
-    public storageService: StorageService
+    public storageService: StorageService,
+    private alertController: AlertController
   ) {
     this.isWeb = Capacitor.getPlatform() === 'web';
   }
 
+  async presentErrorAlert(mensaje: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: mensaje,
+      buttons: ['Aceptar']
+    });
+    await alert.present();
+  }
+
   async init() {
-    if (this.isWeb) {
-      await this.storageService.init();
-    } else {
-      await this.sqliteService.init();
+    try {
+      if (this.isWeb) {
+        await this.storageService.init();
+      } else {
+        await this.sqliteService.init();
+      }
+    } catch (error) {
+      console.error('Error al inicializar:', error);
+      this.presentErrorAlert('Ocurrió un error al iniciar los servicios.');
     }
   }
 
-  // Usuarios
+  private normalizarUsuario(usuario: any): any {
+    return {
+      ...usuario,
+      nombre: usuario.nombre?.toUpperCase(),
+      apellidos: usuario.apellidos?.toUpperCase(),
+      direccion: usuario.direccion?.toUpperCase(),
+      telefono: usuario.telefono?.toUpperCase(),
+      comuna: usuario.comuna?.toUpperCase(),
+      ciudad: usuario.ciudad?.toUpperCase(),
+      correo: usuario.correo?.toLowerCase()
+    };
+  }
+
   async saveUser(usuario: any) {
-    if (this.isWeb) {
-      await this.storageService.saveUser(usuario);
-    } else {
-      await this.sqliteService.saveUser(usuario);
+    try {
+      const usuarioNormalizado = this.normalizarUsuario(usuario);
+      if (this.isWeb) {
+        await this.storageService.saveUser(usuarioNormalizado);
+      } else {
+        await this.sqliteService.saveUser(usuarioNormalizado);
+      }
+    } catch (error) {
+      console.error('Error al guardar usuario:', error);
+      this.presentErrorAlert('No se pudo guardar el usuario.');
     }
   }
 
   async getUserByCredentials(correo: string, contrasena: string) {
-    if (this.isWeb) {
-      return await this.storageService.getUserByCredentials(correo, contrasena);
-    } else {
-      return await this.sqliteService.getUserByCredentials(correo, contrasena);
+    try {
+      if (this.isWeb) {
+        return await this.storageService.getUserByCredentials(correo, contrasena);
+      } else {
+        return await this.sqliteService.getUserByCredentials(correo, contrasena);
+      }
+    } catch (error) {
+      console.error('Error al obtener usuario:', error);
+      this.presentErrorAlert('Error al validar las credenciales.');
+      return null;
     }
   }
 
-  // Carrito
   async addToCart(usuarioId: number, juego: any) {
-    if (this.isWeb) {
-      await this.storageService.addToCart(usuarioId, juego);
-    } else {
-      await this.sqliteService.addToCart(usuarioId, juego);
+    try {
+      if (this.isWeb) {
+        await this.storageService.addToCart(usuarioId, juego);
+      } else {
+        await this.sqliteService.addToCart(usuarioId, juego);
+      }
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      this.presentErrorAlert('No se pudo agregar el juego al carrito.');
     }
   }
 
   async getCart(usuarioId: number) {
-    if (this.isWeb) {
-      return await this.storageService.getCart(usuarioId);
-    } else {
-      return await this.sqliteService.getCart(usuarioId);
+    try {
+      if (this.isWeb) {
+        return await this.storageService.getCart(usuarioId);
+      } else {
+        return await this.sqliteService.getCart(usuarioId);
+      }
+    } catch (error) {
+      console.error('Error al obtener carrito:', error);
+      this.presentErrorAlert('No se pudo cargar el carrito.');
+      return [];
     }
   }
 
   async clearCart(usuarioId: number) {
-    if (this.isWeb) {
-      await this.storageService.clearCart(usuarioId);
-    } else {
-      await this.sqliteService.clearCart(usuarioId);
+    try {
+      if (this.isWeb) {
+        await this.storageService.clearCart(usuarioId);
+      } else {
+        await this.sqliteService.clearCart(usuarioId);
+      }
+    } catch (error) {
+      console.error('Error al limpiar carrito:', error);
+      this.presentErrorAlert('No se pudo vaciar el carrito.');
     }
   }
 
   async removeFromCart(usuarioId: number, itemId: number) {
-    if (this.isWeb) {
-      await this.storageService.removeFromCart(usuarioId, itemId);
-    } else {
-      await this.sqliteService.removeFromCart(itemId);
+    try {
+      if (this.isWeb) {
+        await this.storageService.removeFromCart(usuarioId, itemId);
+      } else {
+        await this.sqliteService.removeFromCart(itemId);
+      }
+    } catch (error) {
+      console.error('Error al eliminar del carrito:', error);
+      this.presentErrorAlert('No se pudo eliminar el juego del carrito.');
     }
   }
 
-  // Transacciones
   async saveTransaction(usuarioId: number, codigo: string, juegos: any[]) {
-    if (this.isWeb) {
-      await this.storageService.saveTransaction(usuarioId, codigo, juegos);
-    } else {
-      await this.sqliteService.saveTransaction(usuarioId, codigo, juegos);
+    try {
+      if (this.isWeb) {
+        await this.storageService.saveTransaction(usuarioId, codigo, juegos);
+      } else {
+        await this.sqliteService.saveTransaction(usuarioId, codigo, juegos);
+      }
+    } catch (error) {
+      console.error('Error al guardar transacción:', error);
+      this.presentErrorAlert('No se pudo guardar la transacción.');
     }
   }
 
   async getTransactions(usuarioId: number) {
-    if (this.isWeb) {
-      return await this.storageService.getTransactions(usuarioId);
-    } else {
-      return await this.sqliteService.getTransactions(usuarioId);
+    try {
+      if (this.isWeb) {
+        return await this.storageService.getTransactions(usuarioId);
+      } else {
+        return await this.sqliteService.getTransactions(usuarioId);
+      }
+    } catch (error) {
+      console.error('Error al obtener transacciones:', error);
+      this.presentErrorAlert('No se pudieron obtener las transacciones.');
+      return [];
     }
   }
 
-  // Sesión
   async saveSessionUser(user: any) {
-    if (this.isWeb) {
-      await this.storageService.saveSessionUser(user);
-    } else {
-      await this.sqliteService.saveSessionUser(user);
+    try {
+      if (this.isWeb) {
+        await this.storageService.saveSessionUser(user);
+      } else {
+        await this.sqliteService.saveSessionUser(user);
+      }
+    } catch (error) {
+      console.error('Error al guardar sesión:', error);
+      this.presentErrorAlert('No se pudo guardar la sesión del usuario.');
     }
   }
 
   async getSessionUser() {
-    if (this.isWeb) {
-      return await this.storageService.getSessionUser();
-    } else {
-      return await this.sqliteService.getSessionUser();
+    try {
+      if (this.isWeb) {
+        return await this.storageService.getSessionUser();
+      } else {
+        return await this.sqliteService.getSessionUser();
+      }
+    } catch (error) {
+      console.error('Error al obtener sesión:', error);
+      this.presentErrorAlert('No se pudo recuperar la sesión del usuario.');
+      return null;
     }
   }
 
   async clearSessionUser() {
-    if (this.isWeb) {
-      await this.storageService.clearSessionUser();
-    } else {
-      await this.sqliteService.clearSessionUser();
+    try {
+      if (this.isWeb) {
+        await this.storageService.clearSessionUser();
+      } else {
+        await this.sqliteService.clearSessionUser();
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      this.presentErrorAlert('No se pudo cerrar la sesión del usuario.');
     }
   }
 }

@@ -5,8 +5,6 @@
 </ion-header>
 
 <ion-content class="form-content">
-
-  <!-- Fondo animado -->
   <div class="background-animation">
     <lottie-player
       src="assets/fondo-registro.json"
@@ -17,72 +15,90 @@
     </lottie-player>
   </div>
 
-  <div class="form-container">
+  <div #formContainer class="form-container">
     <ion-card class="registro-card">
       <ion-card-header>
         <ion-card-title class="titulo">Regístrate</ion-card-title>
         <ion-card-subtitle class="subtitulo">Ingresa tus datos</ion-card-subtitle>
-         <ion-button fill="clear" class="btn-volver" (click)="volver()">
-            Volver al login
-          </ion-button>
-
+        <ion-button fill="clear" class="btn-volver" (click)="volver()">Volver al login</ion-button>
       </ion-card-header>
 
       <ion-card-content>
         <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="formulario">
-          <ion-item>
+
+          <!-- Nombre -->
+          <ion-item [class.valid]="registroForm.get('nombre')?.valid"
+                    [class.invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
             <ion-label position="stacked">Nombre</ion-label>
-            <ion-input formControlName="nombre"></ion-input>
+            <ion-input formControlName="nombre" placeholder="Ej: DENISSE"></ion-input>
+            <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('nombre')?.valid"></ion-icon>
+            <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched"></ion-icon>
           </ion-item>
 
-          <ion-item>
+          <!-- Apellidos -->
+          <ion-item [class.valid]="registroForm.get('apellidos')?.valid"
+                    [class.invalid]="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched">
             <ion-label position="stacked">Apellidos</ion-label>
-            <ion-input formControlName="apellidos"></ion-input>
+            <ion-input formControlName="apellidos" placeholder="Ej: DÍAZ VILLALOBOS"></ion-input>
+            <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('apellidos')?.valid"></ion-icon>
+            <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched"></ion-icon>
           </ion-item>
 
-          <ion-item>
+          <!-- Correo -->
+          <ion-item [class.valid]="registroForm.get('correo')?.valid"
+                    [class.invalid]="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched">
             <ion-label position="stacked">Correo</ion-label>
-            <ion-input type="email" formControlName="correo"></ion-input>
+            <ion-input type="email" formControlName="correo" placeholder="example@example.com"></ion-input>
+            <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('correo')?.valid"></ion-icon>
+            <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched"></ion-icon>
           </ion-item>
 
-          <ion-item>
+          <!-- Contraseña -->
+          <ion-item [class.valid]="registroForm.get('contrasena')?.valid"
+                    [class.invalid]="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
             <ion-label position="stacked">Contraseña</ion-label>
-            <ion-input type="password" formControlName="contrasena"></ion-input>
+            <ion-input type="password" formControlName="contrasena" placeholder="4 dígitos numéricos"></ion-input>
+            <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('contrasena')?.valid"></ion-icon>
+            <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched"></ion-icon>
           </ion-item>
 
+          <!-- Fecha de nacimiento -->
           <ion-item>
             <ion-label position="stacked">Fecha de nacimiento</ion-label>
             <ion-input type="date" formControlName="fecha_nacimiento" placeholder="Selecciona fecha"></ion-input>
           </ion-item>
 
+          <!-- Dirección -->
           <ion-item>
             <ion-label position="stacked">Dirección</ion-label>
-            <ion-input formControlName="direccion"></ion-input>
+            <ion-input formControlName="direccion" placeholder="Ej: AV. PRINCIPAL 123"></ion-input>
           </ion-item>
 
+          <!-- Teléfono -->
           <ion-item>
             <ion-label position="stacked">Teléfono</ion-label>
-            <ion-input formControlName="telefono"></ion-input>
+            <ion-input formControlName="telefono" placeholder="123456789"></ion-input>
           </ion-item>
 
+          <!-- Comuna -->
           <ion-item>
             <ion-label position="stacked">Comuna</ion-label>
-            <ion-input formControlName="comuna"></ion-input>
+            <ion-input formControlName="comuna" placeholder="SANTIAGO CENTRO"></ion-input>
           </ion-item>
 
+          <!-- Ciudad -->
           <ion-item>
             <ion-label position="stacked">Ciudad</ion-label>
-            <ion-input formControlName="ciudad"></ion-input>
+            <ion-input formControlName="ciudad" placeholder="SANTIAGO"></ion-input>
           </ion-item>
 
           <div class="botones">
-      <ion-button type="button" style="background: #ac4627; color: white;" (click)="limpiar()">Limpiar</ion-button>
-      <ion-button type="submit" style="background: #32269c; color: white;" [disabled]="registroForm.invalid">Registrarse</ion-button> 
-    </div>
-        </form>
+            <ion-button type="button" style="background: #ac4627; color: white;" (click)="limpiar()">Limpiar</ion-button>
+            <ion-button type="submit" style="background: #32269c; color: white;" [disabled]="registroForm.invalid">Registrarse</ion-button>
+          </div>
 
+        </form>
       </ion-card-content>
     </ion-card>
   </div>
-
 </ion-content>

@@ -118,7 +118,7 @@ export class SqliteService {
       );
     `);
 
-    // Crear admin si no existe
+    // Crear admin de prueba
     const adminExists = await this.getUserByCredentials('admin@admin.com', '1234');
     if (!adminExists) {
       await this.saveUser({
@@ -138,25 +138,37 @@ export class SqliteService {
     }
   }
 
-  // Usuarios
+  // GUARDAR Usuarios
   async saveUser(usuario: any) {
-    const query = `
-      INSERT INTO users 
-      (nombre, apellidos, correo, contrasena, fecha_nacimiento, direccion, telefono, comuna, ciudad)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    await this.db.run(query, [
-      usuario.nombre,
-      usuario.apellidos,
-      usuario.correo,
-      usuario.contrasena,
-      usuario.fecha_nacimiento,
-      usuario.direccion,
-      usuario.telefono,
-      usuario.comuna,
-      usuario.ciudad,
-    ]);
+  // Verificar si el correo ya existe
+  const existe = await this.db.query(
+    'SELECT id FROM users WHERE correo = ?',
+    [usuario.correo]
+  );
+
+  if (existe.values && existe.values.length > 0) {
+    throw new Error('UsuarioDuplicado'); // revisado desde user-data.service.ts
   }
+
+  const query = `
+    INSERT INTO users 
+    (nombre, apellidos, correo, contrasena, fecha_nacimiento, direccion, telefono, comuna, ciudad)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  await this.db.run(query, [
+    usuario.nombre,
+    usuario.apellidos,
+    usuario.correo,
+    usuario.contrasena,
+    usuario.fecha_nacimiento,
+    usuario.direccion,
+    usuario.telefono,
+    usuario.comuna,
+    usuario.ciudad,
+  ]);
+}
+
 
   async getUserByCredentials(correo: string, contrasena: string) {
     const result = await this.db.query(
@@ -250,4 +262,7 @@ export class SqliteService {
   async clearSessionUser() {
     await this.db.run('DELETE FROM session');
   }
+
+  
+
 }

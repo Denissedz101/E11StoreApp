@@ -172,6 +172,19 @@ ion-button[color="success"] {
   --padding-end: 0;
 
   &:hover {
-    color: #b474b1; // Opcional efecto al pasar el mouse
+    color: #b474b1; 
   }
+}
+
+ion-item.valid {
+  --highlight-color-valid: #10dc60;
+}
+
+ion-item.invalid {
+  --highlight-color-invalid: #f04141;
+}
+
+ion-icon {
+  font-size: 1.2em;
+  margin-left: 5px;
 }
