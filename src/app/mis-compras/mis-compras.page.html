@@ -1,6 +1,18 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Mis Compras</ion-title>
+  <ion-toolbar class="header-toolbar">
+    <div class="toolbar-left">
+      <div class="logo-container">
+        <img src="assets/logo-tiendaRLL.png" alt="E11evenStore" class="logo-header" />
+        <ion-title class="titulo-app">E11evenStore | Mis Compras</ion-title>
+      </div>
+    </div>
+
+    <app-top-menu></app-top-menu>
+
+    <ion-button fill="clear" color="danger" shape="round" (click)="cerrarSesion()" class="logout-btn">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Cerrar sesión
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 

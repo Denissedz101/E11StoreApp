@@ -4,7 +4,7 @@ import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-//import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+
 
 @Component({
   selector: 'app-home',
@@ -44,7 +44,6 @@ export class HomePage implements OnInit {
     private userDataService: UserDataService,
     private router: Router,
     private navCtrl: NavController,
-    //private iab: InAppBrowser,
     private http: HttpClient
   ) {}
 

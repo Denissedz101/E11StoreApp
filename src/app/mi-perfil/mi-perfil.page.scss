@@ -3,37 +3,40 @@
   padding: 1rem;
 }
 
+//header
 .header-toolbar {
-  --background: #0f0f0f;
+  --background: none;
+  background: linear-gradient(to right, #2c0a44, #000000);
+  color: white;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 8px 12px;
+  height: auto;
+  position: relative;
 }
-
+//logo-header
 .logo-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 100%;
+  gap: 10px;
 }
 
 .logo-header {
-  height: 80px;
-  object-fit: contain; 
+  height: 60px;
+  width: auto;
+  object-fit: contain;
 }
-
-.header-gradient {
-  --background: transparent !important;
-  background: linear-gradient(to right, #6a0dad, #000000) !important;
-}
-
-
-.section-title {
+//titulo-header
+.titulo-app {
+  font-size: 1.2rem;
+  font-weight: bold;
   color: white;
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 0;
+}
+//logo cierre sesion
+.logout-btn {
+  margin-right: 8px;
 }
 
 // Estilos para los inputs

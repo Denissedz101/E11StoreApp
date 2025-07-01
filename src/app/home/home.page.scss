@@ -1,45 +1,55 @@
 .home-background {
-  --background: linear-gradient(to right, #6a0dad, #000000) !important;
+  --background: none !important;
+  background: linear-gradient(to right, #2c0a44, #000000);
+  color: white;
   padding: 1rem;
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  ion-content::part(scroll) {
+    overscroll-behavior: contain;
+  }
 }
 
-/***** header *****/
+//header
 .header-toolbar {
-  background: linear-gradient(to right, #001f3f, #000000); 
+  --background: none;
+  background: linear-gradient(to right, #2c0a44, #000000);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 8px 12px;
+  height: auto;
+  position: relative;
 }
-
-
+//logo-header
 .logo-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 100%;
+  gap: 10px;
 }
 
 .logo-header {
-  height: 80px;
-  object-fit: contain; // evita que se vea estirado o "chato"
+  height: 60px;
+  width: auto;
+  object-fit: contain;
 }
-
-/*
-.header-gradient {
-  --background: transparent !important;
-  background: linear-gradient(to right, #6a0dad, #000000) !important;
-}
-*/
-
-.section-title {
-  color: #ffffff;
-  text-align: center;
+//titulo-header
+.titulo-app {
+  font-size: 1.2rem;
   font-weight: bold;
-  font-size: 2rem; 
-  margin-top: 20px;
+  color: white;
+  margin: 0;
 }
+//logo cierre sesion
+.logout-btn {
+  margin-right: 8px;
+}
+
+/* contenido */
+
 
 
 ion-list ion-item {

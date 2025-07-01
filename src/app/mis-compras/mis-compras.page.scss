@@ -1,0 +1,35 @@
+//header
+.header-toolbar {
+  --background: none;
+  background: linear-gradient(to right, #2c0a44, #000000);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  height: auto;
+  position: relative;
+}
+//logo-header
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-header {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+//titulo-header
+.titulo-app {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+//logo cierre sesion
+.logout-btn {
+  margin-right: 8px;
+}

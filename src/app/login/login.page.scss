@@ -22,33 +22,36 @@ ion-content {
 }
 
 /***** Header logo *****/
-.custom-toolbar {
-  --background: linear-gradient(to right, #2c0a44, #000000); // Gradiente púrpura a negro
+//header
+.header-toolbar {
+  --background: none;
+  background: linear-gradient(to right, #2c0a44, #000000);
   color: white;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+  justify-content: space-between;
+  align-items: left;
+  padding: 8px 12px;
+  height: auto;
   position: relative;
-  height: 80px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+//logo-header
+.logo-container {
+  display: flex;
+  align-items: left;
+  gap: 10px;
+}
 
-  ion-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
-  }
-
-  .logo-header {
-    position: absolute;
-    left: 15px;
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-  }
+.logo-header {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+//titulo-header
+.titulo-app {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
 }
 
 /***** Fondo animado en pantalla completa *****/
