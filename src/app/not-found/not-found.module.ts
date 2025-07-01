@@ -14,6 +14,7 @@ import { NotFoundPage } from './not-found.page';
     FormsModule,
     IonicModule,
     NotFoundPageRoutingModule
+
   ],
   declarations: [NotFoundPage]
 })
