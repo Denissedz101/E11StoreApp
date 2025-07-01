@@ -1,17 +1,14 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Ubica nuestras tiendas</ion-title>
+  <ion-toolbar class="header-toolbar">
+    <div class="toolbar-left">
+      <div class="logo-container">
+        <img src="assets/logo-tiendaRLL.png" alt="E11evenStore" class="logo-header" />
+        <ion-title class="titulo-app">E11evenStore | Ubica nuestras tiendas 📍 </ion-title>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <iframe
-    *ngIf="mapaUrl"
-    [src]="mapaUrl"
-    width="100%"
-    height="400"
-    frameborder="0"
-    style="border:0;"
-    allowfullscreen>
-  </iframe>
+<ion-content fullscreen class="map-content">
+  <div id="map"></div>
 </ion-content>

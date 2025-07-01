@@ -35,3 +35,50 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* === GLOBAL CONFIG PANTALLAS === */
+
+html,
+body,
+ion-app,
+ion-content {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  --ion-safe-area-top: 0px;
+  --ion-safe-area-bottom: 0px;
+  --background: none !important;
+  background: linear-gradient(to bottom, #6a0dad, #000000) !important;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* Garantiza que el contenido no se recorte en móviles con notch */
+ion-content::part(scroll) {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  min-height: 100vh;
+}
+
+/* Asegura que el ion-header y toolbar se adapten */
+ion-header,
+ion-toolbar {
+  --background: linear-gradient(to right, #2c0a44, #000000);
+  color: white;
+  height: auto;
+  min-height: 70px;
+}
+
+/* Estilos generales de texto */
+h1, h2, h3, h4, h5, h6, p, span, ion-label {
+  color: white !important;
+}
+
+/* Botones redondeados y personalizados */
+ion-button {
+  --border-radius: 20px;
+  font-weight: bold;
+}
