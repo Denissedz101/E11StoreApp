@@ -125,12 +125,15 @@ export class HomePage implements OnInit {
         next: (data) => {
           console.log('📰 Datos crudos:', data);
           const resultados = data.results || [];
-          this.noticias = resultados.slice(0, 4).map((item: any, index: number) => ({
+          this.noticias = resultados
+          .filter((item: any) => item.title && (item.description || item.content)) 
+          .slice(0, 4) 
+          .map((item: any, index: number) => ({
             id: index,
             title: item.title,
             fullBody: item.description || item.content || 'Sin contenido',
             resumen: this.extraerResumen(item.description || item.content || 'Sin contenido', 50),
-            link: item.link 
+            link: item.link
           }));
         },
         error: (error) => {
