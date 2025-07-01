@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
-    <ion-title class="ion-text-center">E11evenStore:::Registro</ion-title>
+    <ion-title class="ion-text-center">E11evenStore | Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -30,7 +30,7 @@
           <ion-item [class.valid]="registroForm.get('nombre')?.valid"
                     [class.invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
             <ion-label position="stacked">Nombre</ion-label>
-            <ion-input formControlName="nombre" placeholder="Ej: DENISSE"></ion-input>
+            <ion-input formControlName="nombre" placeholder="Ej: PRIMERO"></ion-input>
             <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('nombre')?.valid"></ion-icon>
             <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched"></ion-icon>
           </ion-item>
@@ -39,7 +39,7 @@
           <ion-item [class.valid]="registroForm.get('apellidos')?.valid"
                     [class.invalid]="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched">
             <ion-label position="stacked">Apellidos</ion-label>
-            <ion-input formControlName="apellidos" placeholder="Ej: DÍAZ VILLALOBOS"></ion-input>
+            <ion-input formControlName="apellidos" placeholder="Ej: SEGUNDO TERCERO"></ion-input>
             <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('apellidos')?.valid"></ion-icon>
             <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched"></ion-icon>
           </ion-item>
@@ -57,7 +57,7 @@
           <ion-item [class.valid]="registroForm.get('contrasena')?.valid"
                     [class.invalid]="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
             <ion-label position="stacked">Contraseña</ion-label>
-            <ion-input type="password" formControlName="contrasena" placeholder="4 dígitos numéricos"></ion-input>
+            <ion-input type="password" formControlName="contrasena" placeholder="Escribe una contraseña numéricos de 4 dígitos"></ion-input>
             <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('contrasena')?.valid"></ion-icon>
             <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched"></ion-icon>
           </ion-item>

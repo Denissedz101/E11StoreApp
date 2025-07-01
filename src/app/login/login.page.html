@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
-    <ion-title class="ion-text-center">E11evenStore:::Login</ion-title>
+    <ion-title class="ion-text-center">E11evenStore | Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="login-content" fullscreen>
+<ion-content [fullscreen]="true" class="login-content">
 
   <!-- Fondo animado -->
   <div class="background-animation">
@@ -18,34 +18,36 @@
   </div>
 
   <div class="logo-container">
-    <ion-card>
+    <ion-card class="glass-card">
       <ion-card-header>
-        <ion-card-title>Accede a tu Cuenta</ion-card-title>
-        <ion-card-subtitle>Ingresa tu correo y contraseña</ion-card-subtitle>
+        <ion-card-title>Bienvenido/a</ion-card-title>
+        <ion-card-subtitle>Ingresa tus credenciales</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
         <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
           <ion-item>
-            <ion-label position="floating">Correo</ion-label>
-            <ion-input type="email" formControlName="correo"></ion-input>
+            <ion-label position="floating">Correo electrónico</ion-label>
+            <ion-input type="email" formControlName="correo" required></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Contraseña</ion-label>
-            <ion-input type="password" formControlName="contrasena"></ion-input>
+            <ion-input type="password" formControlName="contrasena" required></ion-input>
           </ion-item>
 
-          <ion-button color="tertiary" size="default" fill="solid" type="submit" [disabled]="!loginForm.valid">
-            Ingresar
-          </ion-button>
+          <div class="btn-group">
+            <ion-button expand="block" color="tertiary" type="submit" [disabled]="!loginForm.valid">
+              Iniciar sesión
+            </ion-button>
 
-          <ion-button color="secondary" size="default" fill="solid" (click)="goToRegistro()">
-            ¿No tienes cuenta? Regístrate
-          </ion-button>
-
+            <ion-button expand="block" color="primary" (click)="goToRegistro()">
+              ¿No tienes cuenta? Regístrate
+            </ion-button>
+          </div>
         </form>
       </ion-card-content>
     </ion-card>
   </div>
+
 </ion-content>

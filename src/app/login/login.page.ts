@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
 
@@ -19,7 +19,8 @@ export class LoginPage implements OnInit {
     private userDataService: UserDataService,
     private sessionService: SessionService,
     public router: Router,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
@@ -39,31 +40,39 @@ export class LoginPage implements OnInit {
   }
 
   goToRegistro() {
-    if (this.router.url !== '/registro') {
-      this.router.navigateByUrl('/registro');
-    }
+    this.router.navigateByUrl('/registro');
   }
 
   async onLogin() {
-    if (this.loginForm.valid) {
-      const { correo, contrasena } = this.loginForm.value;
+    if (!this.loginForm.valid) {
+      this.mostrarAlerta('Por favor completa todos los campos correctamente.');
+      return;
+    }
 
-      try {
-        const user = await this.userDataService.getUserByCredentials(correo, contrasena);
+    const loading = await this.loadingCtrl.create({
+      message: 'Verificando...',
+      spinner: 'circles'
+    });
+    await loading.present();
 
-        if (user) {
-          await this.sessionService.setActiveUser(user);
-          console.log('✅ Inicio de sesión exitoso:', user);
-          this.router.navigate(['/home']);
-        } else {
-          this.mostrarAlerta('Credenciales incorrectas ❌');
-        }
-      } catch (error) {
-        console.error('❌ Error al iniciar sesión:', error);
-        this.mostrarAlerta('Ocurrió un error al iniciar sesión. Intenta nuevamente.');
+    const { correo, contrasena } = this.loginForm.value;
+
+    try {
+      const user = await this.userDataService.getUserByCredentials(correo, contrasena);
+
+      await loading.dismiss();
+
+      if (user) {
+        await this.sessionService.setActiveUser(user);
+        console.log('✅ Sesión iniciada:', user);
+        this.router.navigate(['/home']);
+      } else {
+        this.mostrarAlerta('Credenciales incorrectas ❌');
       }
-    } else {
-      this.mostrarAlerta('Completa todos los campos requeridos.');
+    } catch (error) {
+      await loading.dismiss();
+      console.error('❌ Error en login:', error);
+      this.mostrarAlerta('Ocurrió un error. Intenta nuevamente más tarde.');
     }
   }
 }
