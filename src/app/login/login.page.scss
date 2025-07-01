@@ -21,19 +21,34 @@ ion-content {
   justify-content: center;
 }
 
-/***** Header oscuro *****/
-ion-header,
-ion-toolbar.custom-toolbar {
-  --background: #1b1a1a !important;
-  background-color: #1b1a1a !important;
-  color: #bdbdbd !important;
-  --color: #bdbdbd !important;
-}
+/***** Header logo *****/
+.custom-toolbar {
+  --background: linear-gradient(to right, #2c0a44, #000000); // Gradiente púrpura a negro
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+  height: 80px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 
-ion-title {
-  color: #bdbdbd !important;
-  font-weight: 600;
-  font-size: 20px;
+  ion-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .logo-header {
+    position: absolute;
+    left: 15px;
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+  }
 }
 
 /***** Fondo animado en pantalla completa *****/

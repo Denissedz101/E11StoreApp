@@ -1,3 +1,15 @@
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <div class="logo-container">
+      <img src="assets/logo-tiendaRLL.png" alt="E11evenStore" class="logo-header" />
+    </div>
+    <app-top-menu></app-top-menu> <!-- para usarlo importar a module.ts de c/page-->
+    <ion-button fill="clear" size="small" color="danger" (click)="cerrarSesion()" style="margin-right: 10px;">
+      Cerrar sesión
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="contact-background">
   <ion-card>
     <ion-button fill="clear" class="camera-button" (click)="tomarFoto()">
@@ -17,6 +29,13 @@
         maxlength="100"
         rows="6">
       </ion-textarea>
+
+      <ion-img
+        *ngIf="fotoBase64"
+        [src]="'data:image/jpeg;base64,' + fotoBase64"
+        style="margin-top: 10px; border-radius: 8px; max-height: 200px; object-fit: cover;">
+      </ion-img>
+
       <ion-button expand="block" (click)="enviar()" [disabled]="mensaje.trim().length === 0">Enviar</ion-button>
     </ion-card-content>
   </ion-card>

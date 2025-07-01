@@ -6,6 +6,27 @@
 
 <ion-content>
   <ion-list *ngIf="carrito.length > 0; else emptyCart">
+
+    <!-- Datos del usuario -->
+    <ion-item>
+      <ion-label>
+        <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+        <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+        <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+      </ion-label>
+    </ion-item>
+
+    <!-- Medio de pago -->
+    <ion-item>
+      <ion-label>Medio de Pago</ion-label>
+      <ion-select [(ngModel)]="medioPago">
+        <ion-select-option value="debito">Débito</ion-select-option>
+        <ion-select-option value="prepago">Prepago</ion-select-option>
+        <ion-select-option value="credito">Crédito</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Lista de productos -->
     <ion-item *ngFor="let item of carrito">
       <ion-label>
         <h2>{{ item.titulo }}</h2>
@@ -16,18 +37,14 @@
       </ion-button>
     </ion-item>
 
-    <ion-item lines="full">
-      <ion-label>
-        <h2>Total:</h2>
-      </ion-label>
-      <ion-note slot="end" color="primary" style="font-weight: bold;">
-        ${{ total }}
-      </ion-note>
+    <ion-item>
+      <ion-label><strong>Total:</strong></ion-label>
+      <ion-note slot="end" color="primary">${{ total }}</ion-note>
     </ion-item>
   </ion-list>
 
   <ng-template #emptyCart>
-    <ion-item lines="none">
+    <ion-item>
       <ion-label>No tienes juegos en el carrito.</ion-label>
     </ion-item>
   </ng-template>
@@ -35,8 +52,6 @@
 
 <ion-footer *ngIf="carrito.length > 0">
   <ion-toolbar>
-    <ion-button expand="full" (click)="finalizarCompra()">
-      Finalizar Compra
-    </ion-button>
+    <ion-button expand="full" (click)="finalizarCompra()">Finalizar Compra</ion-button>
   </ion-toolbar>
 </ion-footer>
