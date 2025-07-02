@@ -60,7 +60,11 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.saveUser(usuarioNormalizado);
       } else {
-        await this.SqliteDbService.saveUser(usuarioNormalizado);
+        await this.SqliteDbService.saveUser(
+        usuarioNormalizado.nombre,
+        usuarioNormalizado.correo,
+        usuarioNormalizado.contrasena
+         );
       }
     } catch (error) {
       console.error('Error al guardar usuario:', error);
@@ -73,7 +77,7 @@ export class UserDataService {
       if (this.isWeb) {
         return await this.storageService.getUserByCredentials(correo, contrasena);
       } else {
-        return await this.sqliteService.getUserByCredentials(correo, contrasena);
+        return await this.SqliteDbService.getUserByCredentials(correo, contrasena);
       }
     } catch (error) {
       console.error('Error al obtener usuario:', error);
@@ -87,7 +91,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.addToCart(usuarioId, juego);
       } else {
-        await this.sqliteService.addToCart(usuarioId, juego);
+        await this.SqliteDbService.addToCart(usuarioId, juego);
       }
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
@@ -100,7 +104,7 @@ export class UserDataService {
       if (this.isWeb) {
         return await this.storageService.getCart(usuarioId);
       } else {
-        return await this.sqliteService.getCart(usuarioId);
+        return await this.SqliteDbService.getCart(usuarioId);
       }
     } catch (error) {
       console.error('Error al obtener carrito:', error);
@@ -114,7 +118,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.clearCart(usuarioId);
       } else {
-        await this.sqliteService.clearCart(usuarioId);
+        await this.SqliteDbService.clearCart(usuarioId);
       }
     } catch (error) {
       console.error('Error al limpiar carrito:', error);
@@ -127,7 +131,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.removeFromCart(usuarioId, itemId);
       } else {
-        await this.sqliteService.removeFromCart(itemId);
+        await this.SqliteDbService.removeFromCart(itemId);
       }
     } catch (error) {
       console.error('Error al eliminar del carrito:', error);
@@ -140,7 +144,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.saveTransaction(usuarioId, codigo, juegos);
       } else {
-        await this.sqliteService.saveTransaction(usuarioId, codigo, juegos);
+        await this.SqliteDbService.saveTransaction(usuarioId, codigo, juegos);
       }
     } catch (error) {
       console.error('Error al guardar transacción:', error);
@@ -153,7 +157,7 @@ export class UserDataService {
       if (this.isWeb) {
         return await this.storageService.getTransactions(usuarioId);
       } else {
-        return await this.sqliteService.getTransactions(usuarioId);
+        return await this.SqliteDbService.getTransactions(usuarioId);
       }
     } catch (error) {
       console.error('Error al obtener transacciones:', error);
@@ -167,7 +171,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.saveSessionUser(user);
       } else {
-        await this.sqliteService.saveSessionUser(user);
+        await this.SqliteDbService.saveSessionUser(user);
       }
     } catch (error) {
       console.error('Error al guardar sesión:', error);
@@ -180,7 +184,7 @@ export class UserDataService {
       if (this.isWeb) {
         return await this.storageService.getSessionUser();
       } else {
-        return await this.sqliteService.getSessionUser();
+        return await this.SqliteDbService.getSessionUser();
       }
     } catch (error) {
       console.error('Error al obtener sesión:', error);
@@ -194,7 +198,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.clearSessionUser();
       } else {
-        await this.sqliteService.clearSessionUser();
+        await this.SqliteDbService.clearSessionUser();
       }
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
