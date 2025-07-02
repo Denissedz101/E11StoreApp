@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Platform, AlertController } from '@ionic/angular';
-import { SqliteService } from './sqlite-db.service';
+import { SqliteDbService } from './sqlite-db.service';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class UserDataService {
 
   constructor(
     private platform: Platform,
-    public sqliteService: SqliteService,
+    public SqliteDbService: SqliteDbService,
     public storageService: StorageService,
     private alertController: AlertController
   ) {
@@ -33,7 +33,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.init();
       } else {
-        await this.sqliteService.init();
+        await this.SqliteDbService.initDB();
       }
     } catch (error) {
       console.error('Error al inicializar:', error);
@@ -60,7 +60,7 @@ export class UserDataService {
       if (this.isWeb) {
         await this.storageService.saveUser(usuarioNormalizado);
       } else {
-        await this.sqliteService.saveUser(usuarioNormalizado);
+        await this.SqliteDbService.saveUser(usuarioNormalizado);
       }
     } catch (error) {
       console.error('Error al guardar usuario:', error);

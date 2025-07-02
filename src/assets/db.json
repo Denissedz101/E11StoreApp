@@ -1,0 +1,25 @@
+{
+  "database": "e11evenDB",
+  "version": 1,
+  "encrypted": false,
+  "mode": "full",
+  "tables": [
+    {
+      "name": "usuarios",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        { "column": "nombre", "value": "TEXT NOT NULL" },
+        { "column": "correo", "value": "TEXT UNIQUE NOT NULL" },
+        { "column": "contrasena", "value": "TEXT NOT NULL" }
+      ]
+    },
+    {
+      "name": "compras",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        { "column": "usuario_id", "value": "INTEGER" },
+        { "column": "fecha", "value": "TEXT" }
+      ]
+    }
+  ]
+}
