@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginPage implements OnInit {
     private userDataService: UserDataService,
     private sessionService: SessionService,
     public router: Router,
+    private authService: AuthService,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController
   ) {}
@@ -58,15 +60,11 @@ export class LoginPage implements OnInit {
   const { correo, contrasena } = this.loginForm.value;
 
   try {
-    const user = await this.userDataService.getUserByCredentials(correo, contrasena);
-
+    const user = await this.authService.login(correo, contrasena);
     await loading.dismiss();
 
-    // Verificar que el usuario tenga 'id'
-    console.log('Usuario recuperado al hacer login:', user); 
-    
     if (user && user.id) {
-      await this.sessionService.setActiveUser(user);  // Guardar el usuario con 'id'
+      await this.sessionService.setActiveUser(user);
       console.log('✅ Sesión iniciada:', user);
       this.router.navigate(['/home']);
     } else {
@@ -78,5 +76,7 @@ export class LoginPage implements OnInit {
     this.mostrarAlerta('Ocurrió un error. Intenta nuevamente más tarde.');
   }
 }
+
+
 
 }

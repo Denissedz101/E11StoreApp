@@ -12,8 +12,12 @@
         { "column": "nombre", "value": "TEXT NOT NULL" },
         { "column": "correo", "value": "TEXT UNIQUE NOT NULL" },
         { "column": "contrasena", "value": "TEXT NOT NULL" }
+      ],
+      "values": [
+        [1, "Denisse Díaz", "denisse@example.com", "1234"]
       ]
     },
+
     {
       "name": "carrito",
       "schema": [

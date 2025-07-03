@@ -25,34 +25,45 @@ export class SqliteDbService {
 
 
   // Inicializa la base de datos desde el JSON
- async initDB() {
-  try {
-    const ret = await this.sqlite.checkConnectionsConsistency();
-    if (ret.result) {
-      await this.sqlite.closeAllConnections();
-    }
+    async initDB() {
+      try {
+        const ret = await this.sqlite.checkConnectionsConsistency();
+        if (ret.result) {
+          await this.sqlite.closeAllConnections();
+        }
 
-     const jsonData = await this.http.get<JsonSQLite>('assets/db.json').toPromise();
+        this.db = await this.sqlite.createConnection("e11evenDB", false, "no-encryption", 1, false);
+        await this.db.open();
+
+        const jsonData = await this.http.get<JsonSQLite>('assets/db.json').toPromise();
         if (!jsonData) {
           throw new Error("No se pudo cargar db.json");
         }
-    
-    const jsonString = JSON.stringify(jsonData);
-    const retImport = await this.sqlite.importFromJson(jsonString);
 
-    if (retImport.changes?.changes) {
-      this.db = await this.sqlite.createConnection("e11evenDB", false, "no-encryption", 1, false);
-      await this.db.open();
-      await this.verificarUsuarios();
-      this.isReady = true;
-      console.log("✔️ DB lista desde JSON");
-    } else {
-      console.error("❌ Error al importar la base de datos desde el JSON");
+        const jsonString = JSON.stringify(jsonData);
+        const retImport = await this.sqlite.importFromJson(jsonString);
+
+        if (retImport.changes?.changes) {
+          const existingConn = await this.sqlite.isConnection("e11evenDB", false);
+          if (existingConn.result) {
+            await this.sqlite.closeConnection("e11evenDB", false);
+          }
+
+          this.db = await this.sqlite.createConnection("e11evenDB", false, "no-encryption", 1, false);
+          await this.db.open();
+          await this.verificarUsuarios();
+          await this.insertarUsuarioDePrueba();
+          this.isReady = true;
+  console.log("✔️ DB lista desde JSON");
+        } else {
+          console.warn("⚠️ No hubo cambios al importar la base");
+        }
+
+      } catch (err) {
+        console.error("❌ Error inicializando la DB:", err);
+      }
     }
-  } catch (err) {
-    console.error("❌ Error inicializando la DB:", err);
-  }
-}
+
 
 
   // Guardar nuevo usuario
@@ -130,6 +141,7 @@ export class SqliteDbService {
     try {
       const res = await this.db.query("SELECT * FROM usuarios");
       console.log("✔️ Usuarios encontrados:", res.values ?? []);
+      console.table(res.values);
     } catch (err) {
       console.error("❌ Error verificando usuarios:", err);
     }
@@ -238,6 +250,24 @@ export class SqliteDbService {
         console.error('❌ Error al listar tablas:', err);
       }
     }
+
+  private async insertarUsuarioDePrueba() {
+  try {
+    const res = await this.db.query("SELECT * FROM usuarios WHERE correo = ?", ['admin@admin.com']);
+
+    if (!res.values || res.values.length === 0) {
+      await this.db.run(
+        `INSERT INTO usuarios (nombre, correo, contrasena) VALUES (?, ?, ?)`,
+        ['Usuario admin', 'admin@admin.com', '1234']
+      );
+      console.log('👤 Usuario demo insertado: admin@admin.com / 1234');
+    } else {
+      console.log('👤 Usuario demo ya existe, no se inserta nuevamente');
+    }
+  } catch (err) {
+    console.error('❌ Error insertando usuario demo:', err);
+  }
+}
 
 
 
