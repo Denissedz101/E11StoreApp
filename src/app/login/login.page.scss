@@ -36,7 +36,7 @@ ion-content {
   position: relative;
 }
 //logo-header
-.logo-container {
+.logo-header {
   display: flex;
   align-items: left;
   gap: 10px;
@@ -81,7 +81,7 @@ ion-content {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  padding: 20px;
+  padding-top: 100px;
 }
 
 /***** Card *****/

@@ -56,15 +56,16 @@ export class MisComprasPage implements OnInit {
     }
   }
 
-  async eliminarItem(juego_id: string) {
-    try {
-      this.carrito = this.carrito.filter(item => item.juego_id !== juego_id);
-      await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
-      this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
-    } catch (error) {
-      console.error('❌ Error al eliminar del carrito:', error);
-    }
+ async eliminarItem(item_id: string) {
+  try {
+    this.carrito = this.carrito.filter(item => item.id !== item_id);
+    await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
+    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+  } catch (error) {
+    console.error('❌ Error al eliminar del carrito:', error);
   }
+}
+
 
   async finalizarCompra() {
     const alert = await this.alertCtrl.create({

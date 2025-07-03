@@ -58,22 +58,25 @@ export class UserDataService {
   }
 
   async saveUser(usuario: any) {
-    try {
-      const usuarioNormalizado = this.normalizarUsuario(usuario);
-      if (this.isWeb) {
-        await this.storageService.saveUser(usuarioNormalizado);
-      } else {
-        await this.SqliteDbService.saveUser(
+  try {
+    usuario.id = Date.now();  // Generamos un ID para el usuario
+    const usuarioNormalizado = this.normalizarUsuario(usuario);
+
+    if (this.isWeb) {
+      await this.storageService.saveUser(usuarioNormalizado);
+    } else {
+      await this.SqliteDbService.saveUser(
         usuarioNormalizado.nombre,
         usuarioNormalizado.correo,
         usuarioNormalizado.contrasena
-         );
-      }
-    } catch (error) {
-      console.error('Error al guardar usuario:', error);
-      this.presentErrorAlert('No se pudo guardar el usuario.');
+      );
     }
+  } catch (error) {
+    console.error('Error al guardar usuario:', error);
+    this.presentErrorAlert('No se pudo guardar el usuario.');
   }
+}
+
 
   async getUserByCredentials(correo: string, contrasena: string) {
     try {
@@ -174,17 +177,23 @@ export class UserDataService {
   }
 
   async saveSessionUser(user: any) {
-    try {
-      if (this.isWeb) {
-        await this.storageService.saveSessionUser(user);
-      } else {
-        await this.SqliteDbService.saveSessionUser(user);
-      }
-    } catch (error) {
-      console.error('Error al guardar sesión:', error);
-      this.presentErrorAlert('No se pudo guardar la sesión del usuario.');
+  try {
+    if (!user.id) {
+      console.error('El usuario no tiene id:', user);
+      throw new Error('El usuario no tiene id');
     }
+
+    if (this.isWeb) {
+      await this.storageService.saveSessionUser(user);
+    } else {
+      await this.SqliteDbService.saveSessionUser(user);
+    }
+  } catch (error) {
+    console.error('Error al guardar sesión:', error);
+    this.presentErrorAlert('No se pudo guardar la sesión del usuario.');
   }
+}
+
 
   async getSessionUser() {
     try {

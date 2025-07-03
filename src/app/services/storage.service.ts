@@ -90,12 +90,23 @@ export class StorageService {
 
   // Sesión
   async saveSessionUser(user: any) {
-    await this.storage.set('sessionUser', user);
+  if (!user.id) {
+    console.error('El usuario no tiene id:', user);
+    throw new Error('El usuario no tiene id');
   }
+  await this.storage.set('sessionUser', user);  // Guardamos el usuario en el almacenamiento
+}
+
 
   async getSessionUser() {
-    return await this.storage.get('sessionUser');
+  const user = await this.storage.get('sessionUser');
+  if (!user || !user.id) {
+    console.error('Usuario no encontrado o sin id:', user);
+    return null;  // Si no tiene id, no lo retornamos
   }
+  return user;
+}
+
 
   async clearSessionUser() {
     await this.storage.remove('sessionUser');

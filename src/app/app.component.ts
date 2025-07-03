@@ -20,3 +20,4 @@ export class AppComponent implements OnInit {
     console.log('☑ App inicializada y storage listo');
   }
 }
+

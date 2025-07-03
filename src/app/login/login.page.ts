@@ -44,35 +44,39 @@ export class LoginPage implements OnInit {
   }
 
   async onLogin() {
-    if (!this.loginForm.valid) {
-      this.mostrarAlerta('Por favor completa todos los campos correctamente.');
-      return;
-    }
-
-    const loading = await this.loadingCtrl.create({
-      message: 'Verificando...',
-      spinner: 'circles'
-    });
-    await loading.present();
-
-    const { correo, contrasena } = this.loginForm.value;
-
-    try {
-      const user = await this.userDataService.getUserByCredentials(correo, contrasena);
-
-      await loading.dismiss();
-
-      if (user) {
-        await this.sessionService.setActiveUser(user);
-        console.log('✅ Sesión iniciada:', user);
-        this.router.navigate(['/home']);
-      } else {
-        this.mostrarAlerta('Credenciales incorrectas ❌');
-      }
-    } catch (error) {
-      await loading.dismiss();
-      console.error('❌ Error en login:', error);
-      this.mostrarAlerta('Ocurrió un error. Intenta nuevamente más tarde.');
-    }
+  if (!this.loginForm.valid) {
+    this.mostrarAlerta('Por favor completa todos los campos correctamente.');
+    return;
   }
+
+  const loading = await this.loadingCtrl.create({
+    message: 'Verificando...',
+    spinner: 'circles'
+  });
+  await loading.present();
+
+  const { correo, contrasena } = this.loginForm.value;
+
+  try {
+    const user = await this.userDataService.getUserByCredentials(correo, contrasena);
+
+    await loading.dismiss();
+
+    // Verificar que el usuario tenga 'id'
+    console.log('Usuario recuperado al hacer login:', user); 
+    
+    if (user && user.id) {
+      await this.sessionService.setActiveUser(user);  // Guardar el usuario con 'id'
+      console.log('✅ Sesión iniciada:', user);
+      this.router.navigate(['/home']);
+    } else {
+      this.mostrarAlerta('Credenciales incorrectas ❌');
+    }
+  } catch (error) {
+    await loading.dismiss();
+    console.error('❌ Error en login:', error);
+    this.mostrarAlerta('Ocurrió un error. Intenta nuevamente más tarde.');
+  }
+}
+
 }

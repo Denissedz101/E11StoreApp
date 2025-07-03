@@ -63,6 +63,7 @@ export class RegistroPage implements OnInit {
       }
 
       const datosFinales = {
+        id: Date.now(),
         ...usuario,
         nombre: usuario.nombre.toUpperCase(),
         apellidos: usuario.apellidos.toUpperCase(),

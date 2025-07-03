@@ -49,27 +49,28 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    console.log('🏠 HomePage cargada correctamente');
+  console.log('🏠 HomePage cargada correctamente');
 
-    this.usuarioActivo = await this.sessionService.getActiveUser();
-    console.log('🧾 Usuario leído desde sesión:', this.usuarioActivo);
+  this.usuarioActivo = await this.sessionService.getActiveUser();
+  console.log('🧾 Usuario leído desde sesión:', this.usuarioActivo);  // Verifica que tenga 'id'
 
-    if (!this.usuarioActivo) {
-      console.warn('🚫 No hay sesión activa, redirigiendo al login...');
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const nombre =
-      this.usuarioActivo.nombre ||
-      this.usuarioActivo.username ||
-      this.usuarioActivo.correo;
-      this.saludo = `Hola, ${nombre} 👋`;
-    console.log('🔐 Sesión iniciada como:', nombre);
-
-    await this.contarCarrito(); //agregamos carrito
-    this.cargarNoticias();
+  if (!this.usuarioActivo || !this.usuarioActivo.id) {
+    console.warn('🚫 No hay sesión activa, redirigiendo al login...');
+    this.router.navigate(['/login']);
+    return;
   }
+
+  const nombre =
+    this.usuarioActivo.nombre ||
+    this.usuarioActivo.username ||
+    this.usuarioActivo.correo;
+  this.saludo = `Hola, ${nombre} 👋`;
+  console.log('🔐 Sesión iniciada como:', nombre);
+
+  await this.contarCarrito(); // Agrega el carrito después de cargar el usuario
+  this.cargarNoticias();
+}
+
 
   // ============== MÉTODOS ================== //
 
@@ -102,12 +103,18 @@ export class HomePage implements OnInit {
 
 async contarCarrito() {
   try {
+    if (!this.usuarioActivo || !this.usuarioActivo.id) {
+      console.warn('Usuario no definido al contar el carrito');
+      return;
+    }
+
     const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
     this.cantidadCarrito = carrito.length;
   } catch (error) {
     console.error('Error al contar el carrito:', error);
   }
 }
+
 
 irAlCarrito() {
   this.router.navigate(['/mis-compras'], { replaceUrl: true });//actualizamos contador al pasar

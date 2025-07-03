@@ -8,8 +8,12 @@ export class SessionService {
   constructor(private userDataService: UserDataService) {}
 
   async setActiveUser(user: any) {
-    await this.userDataService.saveSessionUser(user);
+  if (!user.id) {
+    console.error('El usuario no tiene id:', user);
+    throw new Error('El usuario no tiene id');
   }
+  await this.userDataService.saveSessionUser(user);
+}
 
   async getActiveUser() {
     return await this.userDataService.getSessionUser();

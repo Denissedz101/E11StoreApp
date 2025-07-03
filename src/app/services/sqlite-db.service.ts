@@ -14,7 +14,8 @@ export class SqliteDbService {
   constructor(private platform: Platform) {
   this.platform.ready().then(() => {
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this.initDB(); // ✅ Solo en móvil
+      this.initDB(); //Solo en móvil
+      console.log(' Plataforma web detectada.Se inicializa SQLite.');
     } else {
       console.log('⚠️ Plataforma web detectada. No se inicializa SQLite.');
     }

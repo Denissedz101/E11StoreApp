@@ -30,7 +30,7 @@
           <ion-item [class.valid]="registroForm.get('nombre')?.valid"
                     [class.invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
             <ion-label position="stacked">Nombre</ion-label>
-            <ion-input formControlName="nombre" placeholder="Ej: PRIMERO"></ion-input>
+            <ion-input formControlName="nombre" placeholder="Ingresa tu nombre"></ion-input>
             <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('nombre')?.valid"></ion-icon>
             <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched"></ion-icon>
           </ion-item>
@@ -39,7 +39,7 @@
           <ion-item [class.valid]="registroForm.get('apellidos')?.valid"
                     [class.invalid]="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched">
             <ion-label position="stacked">Apellidos</ion-label>
-            <ion-input formControlName="apellidos" placeholder="Ej: SEGUNDO TERCERO"></ion-input>
+            <ion-input formControlName="apellidos" placeholder="Ingresa tus apellidos"></ion-input>
             <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('apellidos')?.valid"></ion-icon>
             <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('apellidos')?.invalid && registroForm.get('apellidos')?.touched"></ion-icon>
           </ion-item>
