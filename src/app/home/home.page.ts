@@ -67,6 +67,7 @@ export class HomePage implements OnInit {
       this.saludo = `Hola, ${nombre} 👋`;
     console.log('🔐 Sesión iniciada como:', nombre);
 
+    await this.contarCarrito(); //agregamos carrito
     this.cargarNoticias();
   }
 
@@ -109,7 +110,7 @@ async contarCarrito() {
 }
 
 irAlCarrito() {
-  this.router.navigate(['/mis-compras']);
+  this.router.navigate(['/mis-compras'], { replaceUrl: true });//actualizamos contador al pasar
 }
 
 

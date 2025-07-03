@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { AlertController, NavController } from '@ionic/angular';
+import { UserDataService } from '../services/user-data.service';
 
 @Component({
   selector: 'app-mis-compras',
@@ -13,6 +14,7 @@ export class MisComprasPage implements OnInit {
   carrito: any[] = [];
   total: number = 0;
   medioPago: string = 'debito';
+  usuarioActivo: any = null;
 
   usuario = {
     direccion: 'Calle Ficticia 123, Santiago',
@@ -24,24 +26,44 @@ export class MisComprasPage implements OnInit {
     private alertCtrl: AlertController,
     private alertController: AlertController,
     private sessionService: SessionService,
+    private userDataService: UserDataService,
     private router: Router,
-    private navCtrl: NavController,
-  ) { }
+    private navCtrl: NavController
+  ) {}
 
-  ngOnInit() {
-    this.cargarCarrito();
+  async ngOnInit() {
+    this.usuarioActivo = await this.sessionService.getActiveUser();
+
+    if (!this.usuarioActivo) {
+      console.warn('🚫 No hay sesión activa, redirigiendo al login...');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.usuario.correo = this.usuarioActivo.correo || this.usuario.correo;
+    await this.cargarCarrito();
   }
 
-  cargarCarrito() {
-    const datos = localStorage.getItem('carrito');
-    this.carrito = datos ? JSON.parse(datos) : [];
-    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+  async cargarCarrito() {
+    try {
+      const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
+      this.carrito = carrito;
+      this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+    } catch (error) {
+      console.error('❌ Error al cargar carrito:', error);
+      this.carrito = [];
+      this.total = 0;
+    }
   }
 
-  eliminarItem(id: number) {
-    this.carrito = this.carrito.filter(item => item.id !== id);
-    localStorage.setItem('carrito', JSON.stringify(this.carrito));
-    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+  async eliminarItem(juego_id: string) {
+    try {
+      this.carrito = this.carrito.filter(item => item.juego_id !== juego_id);
+      await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
+      this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+    } catch (error) {
+      console.error('❌ Error al eliminar del carrito:', error);
+    }
   }
 
   async finalizarCompra() {
@@ -52,9 +74,12 @@ export class MisComprasPage implements OnInit {
     });
 
     await alert.present();
-   
-  }
 
+    // Limpiar carrito después de la compra
+    await this.userDataService.setCart(this.usuarioActivo.id.toString(), []);
+    this.carrito = [];
+    this.total = 0;
+  }
 
   async cerrarSesion() {
     const alert = await this.alertController.create({
@@ -77,5 +102,4 @@ export class MisComprasPage implements OnInit {
 
     await alert.present();
   }
-
 }

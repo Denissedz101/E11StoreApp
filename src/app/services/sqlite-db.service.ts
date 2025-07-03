@@ -195,6 +195,26 @@ export class SqliteDbService {
         console.error("❌ Error cerrando sesión:", err);
       }
     }
+    
+  //carrito
+  async setCart(usuarioId: number, carrito: any[]): Promise<void> {
+  try {
+    // Eliminar carrito anterior
+   await this.db.run('DELETE FROM carrito WHERE usuario_id = ?', [usuarioId]);
+
+    // Insertar ítem nuevo
+    for (const item of carrito) {
+      await this.db.run(
+        `INSERT INTO carrito (usuario_id, juego_id, titulo, precio, imagen)
+         VALUES (?, ?, ?, ?, ?)`,
+        [usuarioId, item.juego_id, item.titulo, item.precio, item.imagen]
+      );
+    }
+  } catch (error) {
+    console.error('❌ Error en setCart SQLite:', error);
+    throw error;
+  }
+}
 
 
 }

@@ -120,7 +120,7 @@ export class UserDataService {
     }
   }
 
-  async clearCart(usuarioId: number) {
+  async clearCart(usuarioId: number, carrito: any[]) {
     try {
       if (this.isWeb) {
         await this.storageService.clearCart(usuarioId);
@@ -212,4 +212,20 @@ export class UserDataService {
       this.presentErrorAlert('No se pudo cerrar la sesión del usuario.');
     }
   }
+
+  async setCart(usuarioId: number, carrito: any[]): Promise<void> {
+  try {
+    if (this.isWeb) {
+      await this.storageService.setCart(usuarioId, carrito);
+      this.carritoService.setCount(carrito.length);
+    } else {
+      await this.SqliteDbService.setCart(usuarioId, carrito);
+      this.carritoService.setCount(carrito.length);
+    }
+  } catch (error) {
+    console.error('Error al actualizar carrito:', error);
+    this.presentErrorAlert('No se pudo actualizar el carrito.');
+  }
+}
+
 }

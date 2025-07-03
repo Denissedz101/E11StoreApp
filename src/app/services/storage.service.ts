@@ -100,4 +100,10 @@ export class StorageService {
   async clearSessionUser() {
     await this.storage.remove('sessionUser');
   }
+
+  async setCart(usuarioId: number, carrito: any[]) {
+  const key = `carrito_${usuarioId}`;
+  await this._storage?.set(key, carrito);
+}
+
 }
