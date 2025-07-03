@@ -16,6 +16,7 @@ export class HomePage implements OnInit {
   usuarioActivo: any = null;
   saludo: string = '';
   cantidadCarrito: number = 0;
+  loading: boolean = true;
 
   juegos = [
     {
@@ -135,30 +136,26 @@ irAlCarrito() {
   }
 
     cargarNoticias() {
-      const apiKey = 'pub_4324a24eb98a4bf2baa78a3bd0cf5c28';
-      const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=videogames&language=es`;
+    const url = 'https://newsdata.io/api/1/latest?apikey=pub_4324a24eb98a4bf2baa78a3bd0cf5c28&q=esport';
 
-      this.http.get<any>(url).subscribe({
-        next: (data) => {
-          console.log('📰 Datos crudos:', data);
-          const resultados = data.results || [];
-          this.noticias = resultados
-          .filter((item: any) => item.title && (item.description || item.content)) 
-          .slice(0, 4) 
-          .map((item: any, index: number) => ({
-            id: index,
-            title: item.title,
-            fullBody: item.description || item.content || 'Sin contenido',
-            resumen: this.extraerResumen(item.description || item.content || 'Sin contenido', 50),
-            link: item.link
-          }));
-        },
-        error: (error) => {
-          console.error('❌ Error al cargar noticias:', error);
+    this.http.get(url).subscribe({
+      next: (res: any) => {
+        console.log('📰 Noticias recibidas:', res);
+        if (res.results?.length > 0) {
+          this.noticias = res.results.slice(0, 4);
+        } else {
           this.noticias = [];
-        },
-      });
-    }
+          console.warn('⚠️ No se encontraron noticias de esports.');
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('❌ Error al obtener noticias:', err);
+        this.loading = false;
+      }
+    });
+  }
+
 
     abrirNoticia(url: string) {
       window.open(url, '_system'); // navegador del sistema

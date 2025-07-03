@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { SqliteDbService } from './sqlite-db.service';
 import { StorageService } from './storage.service';
+import { CarritoService } from '../services/carrito.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class UserDataService {
     private platform: Platform,
     public SqliteDbService: SqliteDbService,
     public storageService: StorageService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private carritoService: CarritoService
   ) {
     this.isWeb = Capacitor.getPlatform() === 'web';
   }
@@ -29,17 +31,18 @@ export class UserDataService {
   }
 
   async init() {
-    try {
-      if (this.isWeb) {
-        await this.storageService.init();
-      } else {
-        await this.SqliteDbService.initDB();
-      }
-    } catch (error) {
-      console.error('Error al inicializar:', error);
-      this.presentErrorAlert('Ocurrió un error al iniciar los servicios.');
+  try {
+    if (this.isWeb) {
+      await this.storageService.init(); // Para almacenamiento web
+    } else {
+      await this.SqliteDbService.initDB(); // SQLite en dispositivos nativos
     }
+  } catch (error) {
+    console.error('Error al inicializar:', error);
+    this.presentErrorAlert('Ocurrió un error al iniciar los servicios.');
   }
+}
+
 
   private normalizarUsuario(usuario: any): any {
     return {
@@ -87,17 +90,21 @@ export class UserDataService {
   }
 
   async addToCart(usuarioId: number, juego: any) {
-    try {
-      if (this.isWeb) {
-        await this.storageService.addToCart(usuarioId, juego);
-      } else {
-        await this.SqliteDbService.addToCart(usuarioId, juego);
-      }
-    } catch (error) {
-      console.error('Error al agregar al carrito:', error);
-      this.presentErrorAlert('No se pudo agregar el juego al carrito.');
+  try {
+    if (this.isWeb) {
+      await this.storageService.addToCart(usuarioId, juego);
+      const carrito = await this.storageService.getCart(usuarioId);
+      this.carritoService.setCount(carrito.length);
+    } else {
+      await this.SqliteDbService.addToCart(usuarioId, juego);
+      const carrito = await this.SqliteDbService.getCart(usuarioId);
+      this.carritoService.setCount(carrito.length);
     }
+  } catch (error) {
+    console.error('Error al agregar al carrito:', error);
+    this.presentErrorAlert('No se pudo agregar el juego al carrito.');
   }
+}
 
   async getCart(usuarioId: number) {
     try {

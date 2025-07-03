@@ -12,34 +12,42 @@ export class SqliteDbService {
   isReady = false;
 
   constructor(private platform: Platform) {
-    this.platform.ready().then(() => {
-      this.initDB();
-    });
-  }
+  this.platform.ready().then(() => {
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.initDB(); // ✅ Solo en móvil
+    } else {
+      console.log('⚠️ Plataforma web detectada. No se inicializa SQLite.');
+    }
+  });
+}
+
 
   // Inicializa la base de datos desde el JSON
-  async initDB() {
-    try {
-      const ret = await this.sqlite.checkConnectionsConsistency();
-      if (ret.result) {
-        await this.sqlite.closeAllConnections();
-      }
-
-      const jsonData: JsonSQLite = dbJson as JsonSQLite;
-      const jsonString = JSON.stringify(jsonData);
-      const retImport = await this.sqlite.importFromJson(jsonString);
-
-      if (retImport.changes?.changes) {
-        this.db = await this.sqlite.createConnection("e11evenDB", false, "no-encryption", 1, false);
-        await this.db.open();
-        await this.verificarUsuarios();
-        this.isReady = true;
-        console.log("✔️ DB lista desde JSON");
-      }
-    } catch (err) {
-      console.error("❌ Error inicializando la DB:", err);
+ async initDB() {
+  try {
+    const ret = await this.sqlite.checkConnectionsConsistency();
+    if (ret.result) {
+      await this.sqlite.closeAllConnections();
     }
+
+    const jsonData: JsonSQLite = dbJson as JsonSQLite;
+    const jsonString = JSON.stringify(jsonData);
+    const retImport = await this.sqlite.importFromJson(jsonString);
+
+    if (retImport.changes?.changes) {
+      this.db = await this.sqlite.createConnection("e11evenDB", false, "no-encryption", 1, false);
+      await this.db.open();
+      await this.verificarUsuarios();
+      this.isReady = true;
+      console.log("✔️ DB lista desde JSON");
+    } else {
+      console.error("❌ Error al importar la base de datos desde el JSON");
+    }
+  } catch (err) {
+    console.error("❌ Error inicializando la DB:", err);
   }
+}
+
 
   // Guardar nuevo usuario
   async saveUser(nombre: string, correo: string, contrasena: string): Promise<void> {

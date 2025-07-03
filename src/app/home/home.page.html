@@ -46,23 +46,32 @@
   </ion-grid>
 
       <h2 class="section-title">Últimas noticias</h2>
+        <ion-content *ngIf="!loading">
         <ion-list *ngIf="noticias.length > 0; else sinNoticias">
-          <ion-item *ngFor="let noticia of noticias" lines="full">
+          <ion-item *ngFor="let noticia of noticias">
+            <ion-thumbnail slot="start" *ngIf="noticia.image_url">
+              <img [src]="noticia.image_url" />
+            </ion-thumbnail>
             <ion-label>
               <h3>{{ noticia.title }}</h3>
-              <p>{{ noticia.resumen }}</p>
-              <ion-button size="small" fill="clear" (click)="abrirNoticia(noticia.link)">
-               Leer más
-              </ion-button>
+              <p>{{ noticia.pubDate | date: 'short' }}</p>
+              <p>
+                <a [href]="noticia.link" target="_blank">Ver más</a>
+              </p>
             </ion-label>
           </ion-item>
         </ion-list>
 
         <ng-template #sinNoticias>
-          <p style="color: white; text-align: center;">No hay noticias disponibles.</p>
+          <ion-text color="medium" class="ion-padding">
+            No se encontraron noticias de esports.
+          </ion-text>
         </ng-template>
+      </ion-content>
 
-        <!-- btn flotante carrito -->
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+
+        <!-- btn flotante carrito 
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button (click)="irAlCarrito()">
             <ion-icon name="cart-outline"></ion-icon>
@@ -70,6 +79,6 @@
           <ion-badge *ngIf="cantidadCarrito > 0" color="danger" style="position: absolute; top: -5px; right: -5px;">
             {{ cantidadCarrito }}
           </ion-badge>
-        </ion-fab>
+        </ion-fab> -->
 
 </ion-content>

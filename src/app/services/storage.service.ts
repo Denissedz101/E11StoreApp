@@ -41,14 +41,15 @@ export class StorageService {
 
 
   // Carrito
-  async addToCart(usuarioId: number, juego: any) {
-    const key = `cart_${usuarioId}`;
-    let cart = (await this.storage.get(key)) || [];
-    // asignar id temporal único si no tiene
-    if (!juego.id) juego.id = Date.now() + Math.floor(Math.random() * 1000);
-    cart.push(juego);
-    await this.storage.set(key, cart);
-  }
+    async addToCart(usuarioId: number, juego: any) {
+        const key = `cart_${usuarioId}`;
+          let cart = (await this.storage.get(key)) || [];
+        if (!juego.id) juego.id = Date.now() + Math.floor(Math.random() * 1000);
+          cart.push(juego);
+        await this.storage.set(key, cart);
+           console.log("🛒 Juego agregado al carrito (web)");
+    }
+
 
   async getCart(usuarioId: number) {
     const key = `cart_${usuarioId}`;

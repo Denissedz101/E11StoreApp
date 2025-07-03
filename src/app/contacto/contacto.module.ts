@@ -13,7 +13,6 @@ import { ContactoPage } from './contacto.page';
     FormsModule,
     IonicModule,
     TopMenuModule,
-    TopMenuModule,
     ContactoPageRoutingModule
   ],
   declarations: [ContactoPage]

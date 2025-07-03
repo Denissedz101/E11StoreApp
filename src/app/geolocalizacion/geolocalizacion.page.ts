@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
+import { SessionService } from '../services/session.service';
+import { Router } from '@angular/router';
+import { AlertController, NavController } from '@ionic/angular';
+import { TopMenuModule } from '../components/top-menu/top-menu.module';
 
 @Component({
   selector: 'app-geolocalizacion',
@@ -21,6 +25,13 @@ export class GeolocalizacionPage implements OnInit {
   latitud!: number;
   longitud!: number;
 
+  constructor(
+      private sessionService: SessionService,
+    private router: Router,
+      private alertController: AlertController,
+ 
+    ) {}
+
   ngOnInit() {
     this.obtenerUbicacion();
   }
@@ -40,4 +51,29 @@ export class GeolocalizacionPage implements OnInit {
     const url = `https://www.google.com/maps/dir/?api=1&origin=${this.latitud},${this.longitud}&destination=${lat},${lon}&travelmode=driving`;
     window.open(url, '_blank');
   }
+
+  async cerrarSesion() {
+    const alert = await this.alertController.create({
+      header: 'Cerrar sesión',
+      message: '¿Estás segura/o de que quieres cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Cerrar',
+          handler: async () => {
+            await this.sessionService.clearSession();
+            this.router.navigate(['/login']);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+
+
 }
