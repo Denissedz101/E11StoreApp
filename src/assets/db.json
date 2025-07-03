@@ -2,6 +2,7 @@
   "database": "e11evenDB",
   "version": 1,
   "encrypted": false,
+  "overwrite": true,
   "mode": "full",
   "tables": [
     {
@@ -14,11 +15,33 @@
       ]
     },
     {
+      "name": "carrito",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        { "column": "usuario_id", "value": "INTEGER" },
+        { "column": "juego_id", "value": "INTEGER" },
+        { "column": "titulo", "value": "TEXT" },
+        { "column": "precio", "value": "REAL" },
+        { "column": "cantidad", "value": "INTEGER" },
+        { "column": "imagen", "value": "TEXT" }
+      ]
+    },
+    {
       "name": "compras",
       "schema": [
         { "column": "id", "value": "INTEGER PRIMARY KEY AUTOINCREMENT" },
         { "column": "usuario_id", "value": "INTEGER" },
+        { "column": "codigo", "value": "TEXT" },
         { "column": "fecha", "value": "TEXT" }
+      ]
+    },
+    {
+      "name": "session_user",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        { "column": "usuario_id", "value": "INTEGER" },
+        { "column": "nombre", "value": "TEXT" },
+        { "column": "correo", "value": "TEXT" }
       ]
     }
   ]

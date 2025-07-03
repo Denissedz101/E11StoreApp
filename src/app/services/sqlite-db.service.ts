@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection, JsonSQLite } from '@capacitor-community/sqlite';
 import { Platform } from '@ionic/angular';
-import dbJson from 'src/assets/db.json';
+import { HttpClient } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,11 @@ export class SqliteDbService {
   private db!: SQLiteDBConnection;
   isReady = false;
 
-  constructor(private platform: Platform) {
+  constructor(private platform: Platform, private http: HttpClient) {
   this.platform.ready().then(() => {
     if (this.platform.is('android') || this.platform.is('ios')) {
       this.initDB(); //Solo en móvil
-      console.log(' Plataforma web detectada.Se inicializa SQLite.');
+      console.log('📱 Plataforma móvil detectada. Inicializando SQLite...');
     } else {
       console.log('⚠️ Plataforma web detectada. No se inicializa SQLite.');
     }
@@ -31,7 +32,11 @@ export class SqliteDbService {
       await this.sqlite.closeAllConnections();
     }
 
-    const jsonData: JsonSQLite = dbJson as JsonSQLite;
+     const jsonData = await this.http.get<JsonSQLite>('assets/db.json').toPromise();
+        if (!jsonData) {
+          throw new Error("No se pudo cargar db.json");
+        }
+    
     const jsonString = JSON.stringify(jsonData);
     const retImport = await this.sqlite.importFromJson(jsonString);
 
@@ -117,7 +122,7 @@ export class SqliteDbService {
     const res = await this.db.run(stmtCompra, [usuarioId, codigo, fecha]);
     console.log("💳 Compra registrada con código:", codigo);
 
-    // Puedes guardar juegos de la compra si tienes tabla detalle_compras
+    
   }
 
   // Verificación inicial
@@ -216,6 +221,24 @@ export class SqliteDbService {
     throw error;
   }
 }
+
+    // Método para listar todas las tablas existentes en la base de datos
+  
+    async listarTablas(): Promise<void> {
+      if (!this.isReady || !this.db) {
+        console.warn('⚠️ La base de datos aún no está lista. Espera a que se inicialice.');
+        return;
+      }
+
+      try {
+        const res = await this.db.query(`SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`);
+        const tablas = res.values?.map(t => t.name) ?? [];
+        console.log('📋 Tablas en la base de datos:', tablas);
+      } catch (err) {
+        console.error('❌ Error al listar tablas:', err);
+      }
+    }
+
 
 
 }
