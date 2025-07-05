@@ -11,6 +11,9 @@
         { "column": "nombre", "value": "TEXT NOT NULL" },
         { "column": "correo", "value": "TEXT UNIQUE NOT NULL" },
         { "column": "contrasena", "value": "TEXT NOT NULL" }
+      ],
+      "values": [
+        [1, "Administrador", "admin@admin.cl", "1234"]
       ]
     },
     {

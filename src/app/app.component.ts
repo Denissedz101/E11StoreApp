@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { UserDataService } from './services/user-data.service';
+import { StorageService } from './services/storage.service';
+
 
 @Component({
   selector: 'app-root',
@@ -8,15 +10,23 @@ import { UserDataService } from './services/user-data.service';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent implements OnInit {
+export class AppComponent  {
+  
   constructor(
     private platform: Platform,
-    private userDataService: UserDataService
-  ) {}
+    private userDataService: UserDataService,
+    private storageService: StorageService
+    
+  ) {
+    this.initializeApp();
+    console.log('StorageService:', this.storageService);
 
-  async ngOnInit() {
-    await this.platform.ready();
-    await this.userDataService.init();
+  }
+
+
+  async initializeApp() {
+      await this.platform.ready();
+      await this.storageService.init();
     console.log('☑ App inicializada y storage listo');
   }
 }

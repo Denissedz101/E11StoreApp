@@ -19,7 +19,54 @@ export class UserDataService {
     private carritoService: CarritoService
   ) {
     this.isWeb = Capacitor.getPlatform() === 'web';
+    this.init(); //cargamos para guardar el usuario admin
   }
+
+  async init() {
+    try {
+      if (this.isWeb) {
+        await this.storageService.init(); // Para almacenamiento web
+      } else {
+        await this.SqliteDbService.initDB(); // SQLite en dispositivos nativos
+      }
+
+      // Llamar al método que inicializa el usuario admin
+      await this.initDefaultUser();
+    } catch (error) {
+      console.error('Error al inicializar:', error);
+      this.presentErrorAlert('Ocurrió un error al iniciar los servicios.');
+    }
+  }
+
+  async initDefaultUser() {
+    const user = {
+      id: 1,
+      nombre: 'Administrador',
+      correo: 'admin@admin.cl',
+      contrasena: '1234'
+    };
+
+    const isMobile = this.platform.is('android') || this.platform.is('ios');
+
+    if (isMobile) {
+      const existing = await this.SqliteDbService.getUserByCredentials(user.correo, user.contrasena);
+      if (!existing) {
+        await this.SqliteDbService.saveUser(user.nombre, user.correo, user.contrasena);
+        console.log('👤 Usuario admin insertado en SQLite');
+      }
+    } else {
+      const existing = await this.storageService.getUserByCredentials(user.correo, user.contrasena);
+      if (!existing) {
+        await this.storageService.saveUser(user);
+        console.log('👤 Usuario admin insertado en Storage');
+      }
+    // Verificar si el usuario fue guardado correctamente
+      const storedUser = await this.storageService.getItem(`usuario:${user.correo}`);
+      console.log('Usuario almacenado:', storedUser);
+    }
+}
+
+
 
   async presentErrorAlert(mensaje: string) {
     const alert = await this.alertController.create({
@@ -29,20 +76,6 @@ export class UserDataService {
     });
     await alert.present();
   }
-
-  async init() {
-  try {
-    if (this.isWeb) {
-      await this.storageService.init(); // Para almacenamiento web
-    } else {
-      await this.SqliteDbService.initDB(); // SQLite en dispositivos nativos
-    }
-  } catch (error) {
-    console.error('Error al inicializar:', error);
-    this.presentErrorAlert('Ocurrió un error al iniciar los servicios.');
-  }
-}
-
 
   private normalizarUsuario(usuario: any): any {
     return {
@@ -58,56 +91,50 @@ export class UserDataService {
   }
 
   async saveUser(usuario: any) {
-  try {
-    usuario.id = Date.now();  // Generamos un ID para el usuario
-    const usuarioNormalizado = this.normalizarUsuario(usuario);
-
-    if (this.isWeb) {
-      await this.storageService.saveUser(usuarioNormalizado);
-    } else {
-      await this.SqliteDbService.saveUser(
-        usuarioNormalizado.nombre,
-        usuarioNormalizado.correo,
-        usuarioNormalizado.contrasena
-      );
-    }
-  } catch (error) {
-    console.error('Error al guardar usuario:', error);
-    this.presentErrorAlert('No se pudo guardar el usuario.');
-  }
-}
-
-
-  async getUserByCredentials(correo: string, contrasena: string) {
     try {
+      if (!usuario.id) {
+        usuario.id = Date.now();  // Generamos un ID para el usuario
+      }
+      const usuarioNormalizado = this.normalizarUsuario(usuario);
+
       if (this.isWeb) {
-        return await this.storageService.getUserByCredentials(correo, contrasena);
+        await this.storageService.saveUser(usuarioNormalizado);
       } else {
-        return await this.SqliteDbService.getUserByCredentials(correo, contrasena);
+        await this.SqliteDbService.saveUser(
+          usuarioNormalizado.nombre,
+          usuarioNormalizado.correo,
+          usuarioNormalizado.contrasena
+        );
       }
     } catch (error) {
-      console.error('Error al obtener usuario:', error);
-      this.presentErrorAlert('Error al validar las credenciales.');
-      return null;
+      console.error('Error al guardar usuario:', error);
+      this.presentErrorAlert('No se pudo guardar el usuario.');
     }
+  }
+
+  async getUserByCredentials(correo: string, contrasena: string): Promise<any | null> {
+    const isMobile = this.platform.is('android') || this.platform.is('ios');
+    return isMobile
+      ? this.SqliteDbService.getUserByCredentials(correo, contrasena)
+      : this.storageService.getUserByCredentials(correo, contrasena);
   }
 
   async addToCart(usuarioId: number, juego: any) {
-  try {
-    if (this.isWeb) {
-      await this.storageService.addToCart(usuarioId, juego);
-      const carrito = await this.storageService.getCart(usuarioId);
-      this.carritoService.setCount(carrito.length);
-    } else {
-      await this.SqliteDbService.addToCart(usuarioId, juego);
-      const carrito = await this.SqliteDbService.getCart(usuarioId);
-      this.carritoService.setCount(carrito.length);
+    try {
+      if (this.isWeb) {
+        await this.storageService.addToCart(usuarioId, juego);
+        const carrito = await this.storageService.getCart(usuarioId);
+        this.carritoService.setCount(carrito.length);
+      } else {
+        await this.SqliteDbService.addToCart(usuarioId, juego);
+        const carrito = await this.SqliteDbService.getCart(usuarioId);
+        this.carritoService.setCount(carrito.length);
+      }
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      this.presentErrorAlert('No se pudo agregar el juego al carrito.');
     }
-  } catch (error) {
-    console.error('Error al agregar al carrito:', error);
-    this.presentErrorAlert('No se pudo agregar el juego al carrito.');
   }
-}
 
   async getCart(usuarioId: number) {
     try {
@@ -177,23 +204,22 @@ export class UserDataService {
   }
 
   async saveSessionUser(user: any) {
-  try {
-    if (!user.id) {
-      console.error('El usuario no tiene id:', user);
-      throw new Error('El usuario no tiene id');
-    }
+    try {
+      if (!user.id) {
+        console.error('El usuario no tiene id:', user);
+        throw new Error('El usuario no tiene id');
+      }
 
-    if (this.isWeb) {
-      await this.storageService.saveSessionUser(user);
-    } else {
-      await this.SqliteDbService.saveSessionUser(user);
+      if (this.isWeb) {
+        await this.storageService.saveSessionUser(user);
+      } else {
+        await this.SqliteDbService.saveSessionUser(user);
+      }
+    } catch (error) {
+      console.error('Error al guardar sesión:', error);
+      this.presentErrorAlert('No se pudo guardar la sesión del usuario.');
     }
-  } catch (error) {
-    console.error('Error al guardar sesión:', error);
-    this.presentErrorAlert('No se pudo guardar la sesión del usuario.');
   }
-}
-
 
   async getSessionUser() {
     try {
@@ -223,18 +249,17 @@ export class UserDataService {
   }
 
   async setCart(usuarioId: number, carrito: any[]): Promise<void> {
-  try {
-    if (this.isWeb) {
-      await this.storageService.setCart(usuarioId, carrito);
-      this.carritoService.setCount(carrito.length);
-    } else {
-      await this.SqliteDbService.setCart(usuarioId, carrito);
-      this.carritoService.setCount(carrito.length);
+    try {
+      if (this.isWeb) {
+        await this.storageService.setCart(usuarioId, carrito);
+        this.carritoService.setCount(carrito.length);
+      } else {
+        await this.SqliteDbService.setCart(usuarioId, carrito);
+        this.carritoService.setCount(carrito.length);
+      }
+    } catch (error) {
+      console.error('Error al actualizar carrito:', error);
+      this.presentErrorAlert('No se pudo actualizar el carrito.');
     }
-  } catch (error) {
-    console.error('Error al actualizar carrito:', error);
-    this.presentErrorAlert('No se pudo actualizar el carrito.');
   }
-}
-
 }

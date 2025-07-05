@@ -11,6 +11,7 @@ export class StorageService {
 
   async init() {
     this._storage = await this.storage.create();
+     console.log('Storage inicializado', this._storage); 
   }
 
   async setItem(key: string, value: any) {
@@ -18,8 +19,10 @@ export class StorageService {
   }
 
   async getItem(key: string) {
-    return await this._storage?.get(key);
+    console.log('Storage disponible', this._storage);  
+  return await this._storage?.get(key);
   }
+
 
   async removeItem(key: string) {
     await this._storage?.remove(key);
@@ -36,7 +39,8 @@ export class StorageService {
 
   async getUserByCredentials(correo: string, contrasena: string) {
     const user = await this.getItem(`usuario:${correo}`);
-    return user && user.contrasena === contrasena ? user : null;
+        console.log('Usuario recuperado al hacer login:', user);  
+        return user && user.contrasena === contrasena ? user : null;
   }
 
 
