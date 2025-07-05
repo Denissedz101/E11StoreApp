@@ -1,5 +1,5 @@
 {
-  "database": "e11evenDB",
+  "database": "dbName",
   "version": 1,
   "encrypted": false,
   "mode": "full",

@@ -4,6 +4,7 @@ import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
 import { TopMenuModule } from '../components/top-menu/top-menu.module';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-geolocalizacion',
@@ -37,20 +38,40 @@ export class GeolocalizacionPage implements OnInit {
   }
 
   async obtenerUbicacion() {
-    try {
+  try {
+    if (Capacitor.getPlatform() === 'web') {
+      // Web fallback
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.latitud = position.coords.latitude;
+          this.longitud = position.coords.longitude;
+          console.log('Ubicación (web):', this.latitud, this.longitud);
+        },
+        (error) => {
+          console.error('Error en navegador:', error);
+        }
+      );
+    } else {
+      // Android/iOS con plugin
       const position = await Geolocation.getCurrentPosition();
       this.latitud = position.coords.latitude;
       this.longitud = position.coords.longitude;
-      console.log('Ubicación actual:', this.latitud, this.longitud);
-    } catch (error) {
-      console.error('Error al obtener la ubicación:', error);
+      console.log('Ubicación (móvil):', this.latitud, this.longitud);
     }
+  } catch (error) {
+    console.error('Error general al obtener la ubicación:', error);
+  }
+}
+
+  abrirEnGoogleMaps(destLat: number, destLon: number) {
+  if (!this.latitud || !this.longitud) {
+    console.warn('Ubicación actual no disponible aún');
+    return;
   }
 
-  abrirEnGoogleMaps(lat: number, lon: number) {
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${this.latitud},${this.longitud}&destination=${lat},${lon}&travelmode=driving`;
-    window.open(url, '_blank');
-  }
+  const url = `https://www.google.com/maps/dir/?api=1&origin=${this.latitud},${this.longitud}&destination=${destLat},${destLon}&travelmode=driving`;
+  window.open(url, '_blank');
+}
 
   async cerrarSesion() {
     const alert = await this.alertController.create({
