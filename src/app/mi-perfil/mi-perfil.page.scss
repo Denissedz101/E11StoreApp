@@ -1,7 +1,11 @@
 .perfil-background {
+  .perfil-background {
   --background: linear-gradient(to right, #6a0dad, #000000) !important;
   padding: 1rem;
-}
+  padding-top: 2rem; 
+   }
+ }
+
 
 //header
 .header-toolbar {
@@ -65,4 +69,12 @@ ion-button[color='success'] {
 
 ion-button[color='medium'] {
   background: #8e8e8e; // Gris para el botón de cancelar
+}
+
+ion-card {
+  background-color: #1c1c1e;
+  color: white;
+  border-radius: 10px;
+  margin-top: 12rem;
+  position: relative;
 }
