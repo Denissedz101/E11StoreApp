@@ -28,11 +28,11 @@ export class StorageService {
     await this._storage?.remove(key);
   }
 
+  //usuarios ***
   async clear() {
     await this._storage?.clear();
   }
 
-  // Usuarios
   async saveUser(usuario: any) {
     await this.setItem(`usuario:${usuario.correo}`, usuario);
   }
@@ -92,29 +92,33 @@ export class StorageService {
   }
 
 
-  // Sesión
-  async saveSessionUser(user: any) {
-  if (!user.id) {
-    console.error('El usuario no tiene id:', user);
-    throw new Error('El usuario no tiene id');
-  }
-  await this.storage.set('sessionUser', user);  // Guardamos el usuario en el almacenamiento
-}
+  // ***** datos Sesión *******
+  // Guardar sesión
+    async saveSessionUser(user: any) {
+      if (!user.id) {
+        console.error('El usuario no tiene id:', user);
+        throw new Error('El usuario no tiene id');
+      }
+      await this.storage.set('sessionUser', user);
+      await this.storage.set('session_active', 'true'); 
+    }
 
+    // Obtener sesión
+    async getSessionUser() {
+      const user = await this.storage.get('sessionUser');
+      const sessionActive = await this.storage.get('session_active');
+      if (!user || !user.id || sessionActive !== 'true') {
+        console.warn('Usuario no encontrado o sesión inactiva');
+        return null;
+      }
+      return user;
+    }
 
-  async getSessionUser() {
-  const user = await this.storage.get('sessionUser');
-  if (!user || !user.id) {
-    console.error('Usuario no encontrado o sin id:', user);
-    return null;  // Si no tiene id, no lo retornamos
-  }
-  return user;
-}
-
-
-  async clearSessionUser() {
-    await this.storage.remove('sessionUser');
-  }
+    // Cerrar sesión
+    async clearSessionUser() {
+      await this.storage.remove('sessionUser');
+      await this.storage.remove('session_active');
+    }
 
   async setCart(usuarioId: number, carrito: any[]) {
   const key = `carrito_${usuarioId}`;

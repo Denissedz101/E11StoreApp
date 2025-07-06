@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { UserDataService } from '../services/user-data.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-mis-compras',
@@ -32,7 +33,7 @@ export class MisComprasPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.usuarioActivo = await this.sessionService.getActiveUser();
+    this.usuarioActivo = await this.sessionService.getSession();
 
     if (!this.usuarioActivo) {
       console.warn('🚫 No hay sesión activa, redirigiendo al login...');

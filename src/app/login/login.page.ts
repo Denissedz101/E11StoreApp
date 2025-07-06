@@ -13,6 +13,7 @@ import { UserDataService } from '../services/user-data.service';
 })
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
+  authService: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -66,7 +67,8 @@ export class LoginPage implements OnInit {
     console.log('Usuario recuperado al hacer login:', user); 
     
     if (user && user.id) {
-      await this.sessionService.setActiveUser(user);  // Guardar el usuario con 'id'
+      // Usuario válido, iniciar sesión
+      await this.authService.signIn(user);
       console.log('✅ Sesión iniciada:', user);
       this.router.navigate(['/home']);
     } else {

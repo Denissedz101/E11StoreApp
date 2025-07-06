@@ -4,6 +4,7 @@ import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
@@ -51,7 +52,7 @@ export class HomePage implements OnInit {
   async ngOnInit() {
   console.log('🏠 HomePage cargada correctamente');
 
-  this.usuarioActivo = await this.sessionService.getActiveUser();
+  this.usuarioActivo = await this.sessionService.getSession();
   console.log('🧾 Usuario leído desde sesión:', this.usuarioActivo);  // Verifica que tenga 'id'
 
   if (!this.usuarioActivo || !this.usuarioActivo.id) {
