@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
+import { AuthService } from '../services/auth.service'; 
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { UserDataService } from '../services/user-data.service';
 })
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
-  authService: any;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,7 +22,8 @@ export class LoginPage implements OnInit {
     private sessionService: SessionService,
     public router: Router,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class LoginPage implements OnInit {
 
   async onLogin() {
   if (!this.loginForm.valid) {
-    this.mostrarAlerta('Por favor completa todos los campos correctamente.');
+    this.mostrarAlerta('Por favor ingresa tus credenciales correctamente.');
     return;
   }
 
