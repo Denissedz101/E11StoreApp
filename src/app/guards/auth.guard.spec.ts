@@ -1,12 +1,25 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
-describe('authGuard', () => {
+describe('AuthGuard', () => {
   let guard: AuthGuard;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        IonicStorageModule.forRoot()
+      ],
+      providers: [
+        AuthGuard,
+        AuthService
+      ]
+    });
+
     guard = TestBed.inject(AuthGuard);
   });
 

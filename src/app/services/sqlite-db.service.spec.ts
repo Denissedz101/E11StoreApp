@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
+import { IonicStorageModule } from '@ionic/storage-angular';
 import { SqliteDbService } from './sqlite-db.service';
 
 describe('SqliteDBService', () => {
