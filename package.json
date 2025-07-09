@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:e2e": "npx playwright test"
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -73,12 +73,12 @@
     "@angular/language-service": "^20.0.0",
     "@capacitor/cli": "7.4.0",
     "@ionic/angular-toolkit": "^12.0.0",
-    "@playwright/test": "^1.53.2",
     "@types/jasmine": "~5.1.0",
     "@types/leaflet": "^1.9.19",
     "@types/node": "^24.0.10",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
+    "cypress": "^14.5.1",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",
