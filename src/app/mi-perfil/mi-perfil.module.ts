@@ -8,6 +8,10 @@ import { MiPerfilPageRoutingModule } from './mi-perfil-routing.module';
 
 import { MiPerfilPage } from './mi-perfil.page';
 import { TopMenuModule } from '../components/top-menu/top-menu.module';
+import { MockSessionService } from '../services/session.service.mock';
+import { SessionService } from '../services/session.service';
+
+const isCypress = typeof window !== 'undefined' && !!window.Cypress;
 
 @NgModule({
   imports: [
@@ -16,6 +20,12 @@ import { TopMenuModule } from '../components/top-menu/top-menu.module';
     IonicModule,
     TopMenuModule,
     MiPerfilPageRoutingModule
+  ],
+  providers: [
+    {
+      provide: SessionService,
+      useClass: isCypress ? MockSessionService : SessionService
+    }
   ],
   declarations: [MiPerfilPage]
 })

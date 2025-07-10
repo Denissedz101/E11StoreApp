@@ -21,20 +21,68 @@ export class HomePage implements OnInit {
 
   juegos = [
     {
-      juego_id: 'codbo6_ps4',
+      juego_id: '0001123445',
       titulo: 'Call of Duty: Black Ops 6 PS4 Digital',
       imagen:
         'https://cjmdigitales.cl/wp-content/uploads/2024/08/Call-of-Duty-Black-Ops-6-Digital-PS4-700x881.png',
-      descripcion: 'Thriller de acción y espionaje en los 90',
+      descripcion: 'Call of Duty: Black Ops 6 te sumerge en un thriller de acción y espionaje ambientado en los turbulentos años 90, después de la Guerra Fría. Desarrollado por Treyarch y Raven, este título ofrece una narrativa elaborada y un enfoque lleno de intriga y adrenalina.',
       precio: 18990,
     },
     {
-      juego_id: 'tlou2_remastered',
+      juego_id: '0001188736',
       titulo: 'The Last of Us Part II Remastered',
       imagen:
         'https://cjmdigitales.cl/wp-content/uploads/2024/01/The-Last-of-Us-Part-II-Remastered-PS5-scaled-700x900.jpg',
-      descripcion: 'Edición definitiva con mejoras técnicas',
+      descripcion: 'Ciudades abandonadas reclamadas por la naturaleza. Una población diezmada por una plaga moderna. Los supervivientes se matan entre sí para tener comida, armas y todo aquello que pueda caer en sus manos. Joel, un superviviente brutal, y Ellie, una adolescente increíblemente lista para su edad, tendrán que trabajar juntos si desean sobrevivir a su travesía a través de los EE. UU.',
       precio: 28990,
+    },
+	{
+      juego_id: '0004958380',
+      titulo: '8-Bit Invaders',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/28599/8_bist_invaders.png',
+      descripcion: '8-Bit Invaders es un juego de estrategia en tiempo real desarrollado y publicado por Petroglyph Games. Es parte de la serie "8-Bit" que se caracteriza por su estilo retro y sus gráficos en píxeles. En "8-Bit Invaders", los jugadores deben construir y administrar su base, recolectar recursos y entrenar unidades para enfrentarse a las fuerzas enemigas. El juego presenta dos facciones: los invasores alienígenas y los humanos. Cada facción tiene sus propias unidades, tecnologías y estrategias de juego.',
+      precio: 14990,
+    },
+	{
+      juego_id: '0006928791',
+      titulo: '13 Sentinels: Aegis Rim',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/28593/13_Centinels_usa_ps4.jpg',
+      descripcion: 'El juego se desarrolla en un escenario de ciencia ficción y sigue la historia de trece estudiantes de secundaria que se encuentran involucrados en una guerra contra invasores extraterrestres. Los jugadores explorarán una narrativa no lineal que se desarrolla a través de múltiples líneas argumentales entrelazadas.',
+      precio: 24990,
+    },
+	{
+      juego_id: '0002129542',
+      titulo: 'Ace Attorney Investigations Collection',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/32681/aceattorps4chico.png',
+      descripcion: '¡Experimenta ambos juegos de Ace Attorney Investigations en una gloriosa colección! Ponte en los zapatos de Miles Edgeworth, el fiscal de fiscales de la serie principal de juegos de Ace Attorney. Deja atrás la corte y acompaña a Edgeworth a recorrer la escena del crimen mientras reúne evidencia, pistas, y habla con los involucrados. Usa tu ingenio y lo que descubras para resolver casos intrigantes y difíciles mediante la lógica y la deducción.',
+      precio: 26990,
+    },
+	{
+      juego_id: '0004006953 ',
+      titulo: 'Alfred Hitchcock - Vertigo',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/31986/alfredchico.png',
+      descripcion: 'El escritor Ed Miller sale ileso del despeñamiento de su coche por el cañón de Brody, en California. No se ha encontrado a nadie entre los restos del automóvil, pese a que Ed asegura que viajaba con su esposa y su hija. Traumatizado por este suceso, Ed comienza a sufrir graves mareos. Mientras comienza una terapia, Ed va a intentar descubrir lo que realmente sucedió aquel trágico día.Prepárate para una inquietante investigación por el interior de la mente humana: Hay veces en que la verdad es peor que la locura.',
+      precio: 15990,
+    },
+	{
+      juego_id: '0008372454 ',
+      titulo: 'Assassins Creed III Remastered',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/25139/AC3PS4CH.png',
+      descripcion: 'Assassins Creed III Remastered es una versión mejorada y actualizada del aclamado juego de acción y aventuras Assassins Creed III. El juego está ambientado en la época de la Revolución Americana y sigue la historia de Connor Kenway, un asesino mitad nativo americano y mitad británico que lucha por la libertad en medio de la guerra entre templarios y asesinos.',
+      precio: 17990,
+    },
+	{
+      juego_id: '0002888745 ',
+      titulo: 'Batman: Arkham Collection',
+      imagen:
+        'https://www.todojuegos.cl/Productos/_mediaProd/28285/batmanps4ch.png',
+      descripcion: 'Batman: Arkham Collection es un paquete que incluye tres aclamados juegos de la serie Batman Arkham: Batman: Arkham Asylum, Batman: Arkham City y Batman: Arkham Knight. Desarrollados por Rocksteady Studios, estos juegos te sumergen en el papel del icónico superhéroe Batman y te llevan a luchar contra los villanos más peligrosos de Gotham City.',
+      precio: 22990,
     },
   ];
 

@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header slot="fixed">
   <ion-toolbar class="header-toolbar">
     <div class="toolbar-left">
       <div class="logo-container">
@@ -18,29 +18,33 @@
 
 
 <ion-content [fullscreen]="true" class="home-background">
-  <h1 class="section-title">Juegos recién llegados</h1>
-  <h2>Bienvenido, {{ usuarioActivo?.nombre }}</h2>
 
-
-  <ion-card *ngIf="saludo" class="saludo-card">
-    <ion-card-content>
-      <h1 class="section-title">Juegos recién llegados</h1>
+  <!-- Contenedor de saludo y botón -->
+  <div class="saludo-carrito-container">
+    <div *ngIf="saludo" class="saludo-card">
       <h2>Bienvenido, {{ usuarioActivo?.nombre }}</h2>
-    </ion-card-content>
-  </ion-card>
+    </div>
 
-      <!-- Botón -->
-   
-  <ion-button (click)="irAlCarrito()" shape="round" fill="clear">
-  <ion-icon name="cart-outline"></ion-icon> Carrito
-  <ion-badge *ngIf="cantidadCarrito > 0" color="danger" style="position: absolute; top: -5px; right: -5px;">
-    {{ cantidadCarrito }}
-  </ion-badge>
-</ion-button>
+    <ion-button
+        data-testid="btn-carrito"
+        (click)="irAlCarrito()"
+        class="carrito-btn"
+        shape="round"
+        fill="solid"
+        color="tertiary">
+        <ion-icon name="cart-outline"></ion-icon>
+        <span class="btn-text">Carrito</span>
+        <ion-badge *ngIf="cantidadCarrito > 0" color="danger" class="carrito-badge">
+          {{ cantidadCarrito }}
+        </ion-badge>
+  </ion-button>
+
+  </div>
+
 
   <ion-grid>
     <ion-row>
-      <ion-col size="6" *ngFor="let juego of juegos">
+      <ion-col size="3" *ngFor="let juego of juegos">
         <ion-card (click)="verDescripcion(juego)">
           <img [src]="juego.imagen" />
           <ion-card-content>

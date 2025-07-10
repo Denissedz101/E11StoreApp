@@ -1,147 +1,109 @@
+/* Fondo general y estilo básico del contenido */
 .home-background {
-  --background: none !important;
   background: linear-gradient(to right, #2c0a44, #000000);
   color: white;
   padding: 1rem;
-  min-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  position: relative;
-  ion-content::part(scroll) {
-    overscroll-behavior: contain;
-  }
+  padding-top: 80px !important;
 }
 
-//header
+/* Header con logo y título */
 .header-toolbar {
-  --background: none;
-  background: linear-gradient(to right, #2c0a44, #000000);
-  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  height: auto;
-  position: relative;
-  z-index: 1;
-  padding-top: 20px; 
 }
-//logo-header
+
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
 .logo-header {
-  height: 60px;
-  width: auto;
-  object-fit: contain;
+  height: 40px;
+  margin-right: 10px;
 }
-//titulo-header
+
 .titulo-app {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 20px;
   color: white;
-  margin: 0;
 }
-//logo cierre sesion
+
+/* Botón de cerrar sesión */
 .logout-btn {
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
-/* contenido */
-
-
-
-ion-list ion-item {
-  color: white;
+ion-content {
+  --padding-top: 80px; 
 }
 
+/* Contenedor saludo + carrito */
+.saludo-carrito-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+  padding-top: 150px;
+}
 
+/* Tarjeta de saludo */
+.saludo-card {
+  background: #160831;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+}
+
+/* Botón del carrito */
+.carrito-btn {
+  position: relative;
+}
+
+.carrito-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 12px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo tarjetas de juegos */
 ion-card {
-  //background-color: #1c1c1e;
   color: white;
   border-radius: 10px;
+  text-align: center;
+  background: #1a0e29;
 }
 
 ion-card img {
   width: 100%;
-  height: 120px;
+  height: 100px;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
 }
 
 ion-card-content {
-  padding: 10px;
+  padding: 0.5rem;
 }
 
-ion-button {
-  margin-top: 10px;
-}
-
-.saludo-card {
-  margin: 16px;
-  background: linear-gradient(145deg, #3b3b98, #5f27cd);
-  color: white;
+/* Título de sección noticias */
+.section-title {
+  margin-top: 2rem;
+  font-size: 1.5rem;
   text-align: center;
-  border-radius: 12px;
-  padding: 12px;
 }
 
-ion-content {
-  position: relative;
-  z-index: 0; 
-  padding-top: 120px;
-}
-
-/* Estilos del botón del carrito */
-.carrito-btn {
-  --background: #4e73df; /* Fondo azul */
-  --color: white; /* Texto blanco */
-  --border-radius: 30px; /* Bordes redondeados */
-  --padding-start: 12px;
-  --padding-end: 12px;
-  --padding-top: 10px;
-  --padding-bottom: 10px;
-  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-  position: relative;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Espacio entre el icono y el texto */
-  transition: transform 0.2s ease; /* Transición para efectos */
-}
-
-/* Estilo del icono carrito */
-.carrito-btn ion-icon {
-  font-size: 24px; /* Tamaño del icono */
+/* Lista de noticias */
+ion-list ion-item {
+  background: #2c2c54;
+  margin: 0.5rem 0;
   color: white;
-}
-
-/* Estilo del texto */
-.carrito-btn .btn-text {
-  font-size: 14px;
-  text-transform: capitalize;
-}
-
-/* Efecto al hacer hover (pasar el mouse sobre el botón) */
-.carrito-btn:hover {
-  --background: #2e59d9; 
-  transform: translateY(-4px); 
-}
-
-/* Estilo del badge */
-.carrito-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  font-size: 10px;
-  height: 18px;
-  width: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  border-radius: 50%;
 }
