@@ -1,7 +1,7 @@
 describe('Mis Compras', () => {
   beforeEach(() => {
-    cy.login();
-    cy.get('.btn-add-to-cart').first().click();
+    cy.visit('/home');
+    cy.get('.btn-add-to-cart').first().click(); // Asegúrate de que este botón tenga ese selector
     cy.visit('/mis-compras');
   });
 

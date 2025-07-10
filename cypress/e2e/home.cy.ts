@@ -19,14 +19,13 @@ describe('Página Home', () => {
       .should('have.length.at.least', 1)
       .as('tarjetasDeJuegos');
     
-    cy.get('@tarjetasDeJuegos').first().screenshot('primer-juego');  
+    cy.get('@tarjetasDeJuegos').first().should(($el) => {
+      expect($el.height()).to.be.greaterThan(0);
+    }).screenshot('primer-juego');
   });
 
   it('el botón de carrito debe existir y mostrarse', () => {
-
     cy.contains('Bienvenido', { timeout: 10000 }).should('exist');
-
-  
     cy.get('[data-testid="btn-carrito"]', { timeout: 10000 })
       .should('exist')
       .and('be.visible');

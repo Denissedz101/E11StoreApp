@@ -42,7 +42,10 @@ export class UserDataService {
     const user = {
       id: 1,
       nombre: 'Administrador',
+      apellidos: 'sistema',
       correo: 'admin@admin.cl',
+      telefono: '123456799',
+      direccion: 'calle falsa 123',
       contrasena: '1234'
     };
 
