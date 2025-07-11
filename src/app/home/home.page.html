@@ -50,9 +50,13 @@
           <ion-card-content>
             <h3>{{ juego.titulo }}</h3>
             <p><strong>Precio:</strong> ${{ juego.precio | number }}</p>
-            <ion-button expand="block" color="tertiary" (click)="agregarAlCarrito(juego); $event.stopPropagation();">
-              <ion-icon name="cart-outline"></ion-icon> Añadir
-            </ion-button>
+          <ion-button
+                  expand="block"
+                  color="tertiary"
+                  (click)="agregarAlCarrito(juego); $event.stopPropagation();"
+                  data-testid="btn-agregar-al-carrito"> <!-- agregamos temporalemente para pruebas data testid--> 
+                  <ion-icon name="cart-outline"></ion-icon> Añadir
+              </ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>

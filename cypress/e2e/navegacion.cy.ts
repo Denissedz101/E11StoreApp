@@ -9,7 +9,7 @@ describe('Navegación del menú superior', () => {
       .click({ force: true });
 
     cy.url().should('include', '/mi-perfil');
-    cy.contains('Modificar Datos').should('be.visible');
+    cy.contains('Mi Perfil').should('be.visible');
   });
 
   it('debe navegar a Contacto desde el menú superior', () => {
@@ -18,7 +18,7 @@ describe('Navegación del menú superior', () => {
       .click({ force: true });
 
     cy.url().should('include', '/contacto');
-    cy.contains('Formulario de Contacto').should('be.visible');
+    cy.contains('¡Contáctanos!').should('be.visible');
   });
 
   it('debe navegar a Geolocalización desde el menú superior', () => {
