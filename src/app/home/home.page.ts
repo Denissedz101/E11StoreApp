@@ -123,6 +123,14 @@ export class HomePage implements OnInit {
 
   // ============== MÉTODOS ================== //
 
+  async ionViewWillEnter() {
+  this.usuarioActivo = await this.sessionService.getSession();
+  if (this.usuarioActivo?.id) {
+    await this.contarCarrito();
+  }
+}
+
+
   async verDescripcion(juego: any) {
     const alert = await this.alertController.create({
       header: juego.titulo,

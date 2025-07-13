@@ -28,6 +28,7 @@ export class RegistroPage implements OnInit {
       apellidos: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
+      repetir_contrasena: ['', Validators.required], 
       fecha_nacimiento: ['', Validators.required],
       direccion: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
@@ -54,47 +55,54 @@ export class RegistroPage implements OnInit {
   }
 
   async registrar() {
-    if (this.registroForm.valid) {
-      const usuario = this.registroForm.value;
+  if (this.registroForm.valid) {
 
-      if (!this.esMayorDeEdad(usuario.fecha_nacimiento)) {
-        this.mostrarAlerta('Debes ser mayor de edad para registrarte.');
-        return;
-      }
-
-      const datosFinales = {
-        id: Date.now(),
-        ...usuario,
-        nombre: usuario.nombre.toUpperCase(),
-        apellidos: usuario.apellidos.toUpperCase(),
-        direccion: usuario.direccion.toUpperCase(),
-        telefono: usuario.telefono.toUpperCase(),
-        comuna: usuario.comuna.toUpperCase(),
-        ciudad: usuario.ciudad.toUpperCase(),
-        correo: usuario.correo.toLowerCase()
-      };
-
-      try {
-        await this.userDataService.saveUser(datosFinales);
-        const alerta = await this.alertCtrl.create({
-          header: '🎉 ¡Felicidades!',
-          message: `
-            <p>🎮 ¡Te has registrado exitosamente en E11evenStore! 🎮</p>
-            <p>Serás redirigido al login...</p>
-          `,
-          buttons: ['OK']
-        });
-        await alerta.present();
-
-        setTimeout(() => this.router.navigate(['/login']), 2000);
-      } catch (error) {
-        console.error('Error al registrar usuario', error);
-        this.mostrarAlerta('Error al registrar usuario. Intenta nuevamente.');
-      }
-    } else {
-      this.mostrarAlerta('Completa todos los campos correctamente.');
+    if (!this.contraseniasIguales()) {
+      this.mostrarAlerta('Las contraseñas no coinciden.');
+      return;
     }
+
+    const usuario = this.registroForm.value;
+
+    if (!this.esMayorDeEdad(usuario.fecha_nacimiento)) {
+      this.mostrarAlerta('Debes ser mayor de edad para registrarte.');
+      return;
+    }
+
+    const datosFinales = {
+      id: Date.now(),
+      ...usuario,
+      nombre: usuario.nombre.toUpperCase(),
+      apellidos: usuario.apellidos.toUpperCase(),
+      direccion: usuario.direccion.toUpperCase(),
+      telefono: usuario.telefono.toUpperCase(),
+      comuna: usuario.comuna.toUpperCase(),
+      ciudad: usuario.ciudad.toUpperCase(),
+      correo: usuario.correo.toLowerCase()
+    };
+
+    try {
+      await this.userDataService.saveUser(datosFinales);
+      const alerta = await this.alertCtrl.create({
+        header: '🎉 ¡Felicidades!',
+        message: `
+          <p>🎮 ¡Te has registrado exitosamente en E11evenStore! 🎮</p>
+          <p>Serás redirigido al login...</p>
+        `,
+        buttons: ['OK']
+      });
+      await alerta.present();
+
+      setTimeout(() => this.router.navigate(['/login']), 2000);
+    } catch (error) {
+      console.error('Error al registrar usuario', error);
+      this.mostrarAlerta('Error al registrar usuario. Intenta nuevamente.');
+    }
+  } else {
+    this.mostrarAlerta('Completa todos los campos correctamente.');
   }
+}
+
 
   volver() {
     this.router.navigateByUrl('/login');
@@ -110,4 +118,11 @@ export class RegistroPage implements OnInit {
       this.formContainer.nativeElement.classList.remove('animar-limpiar');
     }, 1000);
   }
+
+  contraseniasIguales(): boolean {
+    const contrasena = this.registroForm.get('contrasena')?.value;
+    const repetir = this.registroForm.get('repetir_contrasena')?.value;
+    return contrasena === repetir;
+  }
+
 }

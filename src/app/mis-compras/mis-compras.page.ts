@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { UserDataService } from '../services/user-data.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-mis-compras',
@@ -24,7 +23,6 @@ export class MisComprasPage implements OnInit {
   };
 
   constructor(
-    private alertCtrl: AlertController,
     private alertController: AlertController,
     private sessionService: SessionService,
     private userDataService: UserDataService,
@@ -45,6 +43,11 @@ export class MisComprasPage implements OnInit {
     await this.cargarCarrito();
   }
 
+  // Este método se ejecuta cada vez que se entra a esta página
+  async ionViewWillEnter() {
+    await this.cargarCarrito();
+  }
+
   async cargarCarrito() {
     try {
       const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
@@ -57,19 +60,18 @@ export class MisComprasPage implements OnInit {
     }
   }
 
- async eliminarItem(item_id: string) {
-  try {
-    this.carrito = this.carrito.filter(item => item.id !== item_id);
-    await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
-    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
-  } catch (error) {
-    console.error('❌ Error al eliminar del carrito:', error);
+  async eliminarItem(item_id: string) {
+    try {
+      this.carrito = this.carrito.filter(item => item.id !== item_id);
+      await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
+      this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+    } catch (error) {
+      console.error('❌ Error al eliminar del carrito:', error);
+    }
   }
-}
-
 
   async finalizarCompra() {
-    const alert = await this.alertCtrl.create({
+    const alert = await this.alertController.create({
       header: '¡Felicidades por tu compra!',
       message: `Los detalles de la boleta llegarán a tu correo: <strong>${this.usuario.correo}</strong>.`,
       buttons: ['OK'],
@@ -81,6 +83,9 @@ export class MisComprasPage implements OnInit {
     await this.userDataService.setCart(this.usuarioActivo.id.toString(), []);
     this.carrito = [];
     this.total = 0;
+
+    // Navegar al home, se actualizará el contador
+    this.router.navigate(['/home'], { replaceUrl: true });
   }
 
   async cerrarSesion() {

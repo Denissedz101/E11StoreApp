@@ -188,3 +188,13 @@ ion-icon {
   font-size: 1.2em;
   margin-left: 5px;
 }
+
+ion-item.valid {
+  --highlight-color-focused: #2dd36f; // verde
+  --border-color: #2dd36f;
+}
+
+ion-item.invalid {
+  --highlight-color-focused: #eb445a; // rojo
+  --border-color: #eb445a;
+}
