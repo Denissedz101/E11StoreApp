@@ -60,7 +60,7 @@
           <ion-input type="password"
                     formControlName="contrasena"
                     placeholder="Escribe una contraseña numéricos de 4 dígitos"
-                    data-testid=="input-contrasena">
+                    data-testid="input-contrasena">
           </ion-input>
           <ion-icon slot="end" name="checkmark-circle" *ngIf="registroForm.get('contrasena')?.valid"></ion-icon>
           <ion-icon slot="end" name="close-circle" *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched"></ion-icon>
@@ -111,7 +111,9 @@
 
           <div class="botones">
             <ion-button type="button" style="background: #ac4627; color: white;" (click)="limpiar()">Limpiar</ion-button>
-            <ion-button type="submit" style="background: #32269c; color: white;"="registroForm.invalid">Registrarse</ion-button>
+            <ion-button type="submit" style="background: #32269c; color: white;">
+              Registrarse
+            </ion-button>
           </div>
 
         </form>

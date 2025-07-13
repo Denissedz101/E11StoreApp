@@ -121,8 +121,9 @@ export class StorageService {
     }
 
   async setCart(usuarioId: number, carrito: any[]) {
-  const key = `carrito_${usuarioId}`;
+  const key = `cart_${usuarioId}`;  
   await this._storage?.set(key, carrito);
-}
+  }
+
 
 }

@@ -1,12 +1,22 @@
 describe('Mis Compras', () => {
   beforeEach(() => {
-    cy.visit('/home');
-    cy.get('.btn-add-to-cart').first().click(); // Asegúrate de que este botón tenga ese selector
     cy.visit('/mis-compras');
   });
 
-  it('debe mostrar productos en el carrito', () => {
-    cy.contains('Mis Compras').should('be.visible');
-    cy.get('.compra-item').should('have.length.greaterThan', 0);
+  it('debe eliminar un producto del carrito', () => {
+    cy.get('[data-testid="btn-eliminar-item"]').first().click();
+    cy.get('.compra-item').should('have.length', 0);
+  });
+
+  it('debe finalizar la compra y vaciar el carrito', () => {
+    cy.get('[data-testid="btn-finalizar-compra"]').click();
+
+    cy.get('ion-toast')
+      .shadow()
+      .find('.toast-message')
+      .should('contain.text', '¡Felicidades por tu compra!');
+
+    cy.wait(3500);
+    cy.url().should('include', '/home');
   });
 });

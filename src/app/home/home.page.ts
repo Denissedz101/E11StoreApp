@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
+import { CarritoService } from '../services/carrito.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from 'src/app/services/auth.service';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,13 +13,16 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./home.page.scss'],
   standalone: false,
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   usuarioActivo: any = null;
   saludo: string = '';
   cantidadCarrito: number = 0;
   loading: boolean = true;
 
-  juegos = [
+  carritoSub!: Subscription;
+  contadorSub!: Subscription;
+
+  juegos = [//juegos fijos 
     {
       juego_id: '0001123445',
       titulo: 'Call of Duty: Black Ops 6 PS4 Digital',
@@ -92,43 +95,52 @@ export class HomePage implements OnInit {
     private alertController: AlertController,
     private sessionService: SessionService,
     private userDataService: UserDataService,
+    private carritoService: CarritoService,
     private router: Router,
     private navCtrl: NavController,
     private http: HttpClient
   ) {}
 
   async ngOnInit() {
-  console.log('🏠 HomePage cargada correctamente');
+    console.log('🏠 HomePage cargada correctamente');
+    this.usuarioActivo = await this.sessionService.getSession();
 
-  this.usuarioActivo = await this.sessionService.getSession();
-  console.log('🧾 Usuario leído desde sesión:', this.usuarioActivo);  // Verifica que tenga 'id'
+    if (!this.usuarioActivo || !this.usuarioActivo.id) {
+      console.warn('🚫 No hay sesión activa, redirigiendo al login...');
+      this.router.navigate(['/login']);
+      return;
+    }
 
-  if (!this.usuarioActivo || !this.usuarioActivo.id) {
-    console.warn('🚫 No hay sesión activa, redirigiendo al login...');
-    this.router.navigate(['/login']);
-    return;
+    const nombre =
+      this.usuarioActivo.nombre ||
+      this.usuarioActivo.username ||
+      this.usuarioActivo.correo;
+    this.saludo = `Hola, ${nombre} 👋`;
+
+    // Suscripción al contador del carrito
+    this.carritoSub = this.userDataService.carritoActualizado$.subscribe(() => {
+      this.contarCarrito(); // cada vez que se modifica el carrito
+    });
+
+    this.usuarioActivo = await this.sessionService.getSession();
+    await this.contarCarrito();
+
+    this.cargarNoticias();
+
+    
   }
 
-  const nombre =
-    this.usuarioActivo.nombre ||
-    this.usuarioActivo.username ||
-    this.usuarioActivo.correo;
-  this.saludo = `Hola, ${nombre} 👋`;
-  console.log('🔐 Sesión iniciada como:', nombre);
-
-  await this.contarCarrito(); // Agrega el carrito después de cargar el usuario
-  this.cargarNoticias();
-}
-
-
-  // ============== MÉTODOS ================== //
+  ngOnDestroy() {
+    this.carritoSub?.unsubscribe();
+    this.contadorSub?.unsubscribe();
+  }
 
   async ionViewWillEnter() {
   this.usuarioActivo = await this.sessionService.getSession();
   if (this.usuarioActivo?.id) {
-    await this.contarCarrito();
+    this.contarCarrito();
+    }
   }
-}
 
 
   async verDescripcion(juego: any) {
@@ -140,43 +152,36 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
-  //simulamos compra en app
- async agregarAlCarrito(juego: any) {
-  if (!this.usuarioActivo || !this.usuarioActivo.id) return;
+  async agregarAlCarrito(juego: any) {
+    if (!this.usuarioActivo || !this.usuarioActivo.id) return;
 
-  try {
-    await this.userDataService.addToCart(this.usuarioActivo.id.toString(), juego);
-    this.cantidadCarrito++;
-    const alert = await this.alertController.create({
-      header: 'Carrito',
-      message: `Juego <strong>${juego.titulo}</strong> agregado.`,
-      buttons: ['OK'],
-    });
-    await alert.present();
-  } catch (error) {
-    console.error('Error al agregar al carrito:', error);
-  }
-}
-
-async contarCarrito() {
-  try {
-    if (!this.usuarioActivo || !this.usuarioActivo.id) {
-      console.warn('Usuario no definido al contar el carrito');
-      return;
+    try {
+      await this.userDataService.addToCart(this.usuarioActivo.id.toString(), juego);
+      const alert = await this.alertController.create({
+        header: 'Carrito',
+        message: `Juego <strong>${juego.titulo}</strong> agregado.`,
+        buttons: ['OK'],
+      });
+      await alert.present();
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
     }
+  }
 
+  async contarCarrito() {
+  try {
     const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
     this.cantidadCarrito = carrito.length;
-  } catch (error) {
-    console.error('Error al contar el carrito:', error);
+    console.log('Contador actualizado en Home:', this.cantidadCarrito);
+    } catch (error) {
+      console.error('Error al contar el carrito:', error);
+    }
   }
-}
 
 
-irAlCarrito() {
-  this.router.navigate(['/mis-compras'], { replaceUrl: true });//actualizamos contador al pasar
-}
-
+  irAlCarrito() {
+    this.router.navigate(['/mis-compras'], { replaceUrl: true });
+  }
 
   async cerrarSesion() {
     const alert = await this.alertController.create({
@@ -200,35 +205,32 @@ irAlCarrito() {
     await alert.present();
   }
 
-    cargarNoticias() {
-    const url = 'https://newsdata.io/api/1/latest?apikey=pub_4324a24eb98a4bf2baa78a3bd0cf5c28&q=esport';
+  cargarNoticias() {
+    const url =
+      'https://newsdata.io/api/1/latest?apikey=pub_4324a24eb98a4bf2baa78a3bd0cf5c28&q=esport';
 
     this.http.get(url).subscribe({
       next: (res: any) => {
-        console.log('📰 Noticias recibidas:', res);
         if (res.results?.length > 0) {
           this.noticias = res.results.slice(0, 4);
         } else {
           this.noticias = [];
-          console.warn('⚠️ No se encontraron noticias de esports.');
         }
         this.loading = false;
       },
       error: (err) => {
         console.error('❌ Error al obtener noticias:', err);
         this.loading = false;
-      }
+      },
     });
   }
 
+  abrirNoticia(url: string) {
+    window.open(url, '_system');
+  }
 
-    abrirNoticia(url: string) {
-      window.open(url, '_system'); // navegador del sistema
-    }
-  
   private extraerResumen(texto: string, cantidadPalabras: number): string {
-      const palabras = texto.split(/\s+/).slice(0, cantidadPalabras);
-      return palabras.join(' ') + (palabras.length === cantidadPalabras ? '...' : '');
-    }
-    
+    const palabras = texto.split(/\s+/).slice(0, cantidadPalabras);
+    return palabras.join(' ') + (palabras.length === cantidadPalabras ? '...' : '');
+  }
 }

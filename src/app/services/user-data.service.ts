@@ -4,12 +4,23 @@ import { Platform, AlertController } from '@ionic/angular';
 import { SqliteDbService } from './sqlite-db.service';
 import { StorageService } from './storage.service';
 import { CarritoService } from '../services/carrito.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDataService {
   isWeb: boolean;
+
+  public carritoActualizado: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public carritoActualizado$: Observable<boolean> = this.carritoActualizado.asObservable();
+
+  actualizarContadorCarrito(nuevoValor: number) {
+  this.carritoService.setCount(nuevoValor);
+  this.notificarCambioCarrito();
+  }
+
+
 
   constructor(
     private platform: Platform,
@@ -19,18 +30,21 @@ export class UserDataService {
     private carritoService: CarritoService
   ) {
     this.isWeb = Capacitor.getPlatform() === 'web';
-    this.init(); //cargamos para guardar el usuario admin
+    this.init(); // Cargamos para guardar el usuario admin
+  }
+
+  notificarCambioCarrito() {
+    this.carritoActualizado.next(true);
   }
 
   async init() {
     try {
       if (this.isWeb) {
-        await this.storageService.init(); // Para almacenamiento web
+        await this.storageService.init();
       } else {
-        await this.SqliteDbService.initDB(); // SQLite en dispositivos nativos
+        await this.SqliteDbService.initDB();
       }
 
-      // Llamar al método que inicializa el usuario admin
       await this.initDefaultUser();
     } catch (error) {
       console.error('Error al inicializar:', error);
@@ -63,13 +77,11 @@ export class UserDataService {
         await this.storageService.saveUser(user);
         console.log('👤 Usuario admin insertado en Storage');
       }
-    // Verificar si el usuario fue guardado correctamente
+
       const storedUser = await this.storageService.getItem(`usuario:${user.correo}`);
       console.log('Usuario almacenado:', storedUser);
     }
-}
-
-
+  }
 
   async presentErrorAlert(mensaje: string) {
     const alert = await this.alertController.create({
@@ -96,7 +108,7 @@ export class UserDataService {
   async saveUser(usuario: any) {
     try {
       if (!usuario.id) {
-        usuario.id = Date.now();  // Generamos un ID para el usuario
+        usuario.id = Date.now();
       }
       const usuarioNormalizado = this.normalizarUsuario(usuario);
 
@@ -133,6 +145,7 @@ export class UserDataService {
         const carrito = await this.SqliteDbService.getCart(usuarioId);
         this.carritoService.setCount(carrito.length);
       }
+      this.notificarCambioCarrito();
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
       this.presentErrorAlert('No se pudo agregar el juego al carrito.');
@@ -141,11 +154,9 @@ export class UserDataService {
 
   async getCart(usuarioId: number) {
     try {
-      if (this.isWeb) {
-        return await this.storageService.getCart(usuarioId);
-      } else {
-        return await this.SqliteDbService.getCart(usuarioId);
-      }
+      return this.isWeb
+        ? await this.storageService.getCart(usuarioId)
+        : await this.SqliteDbService.getCart(usuarioId);
     } catch (error) {
       console.error('Error al obtener carrito:', error);
       this.presentErrorAlert('No se pudo cargar el carrito.');
@@ -153,13 +164,14 @@ export class UserDataService {
     }
   }
 
-  async clearCart(usuarioId: number, carrito: any[]) {
+  async clearCart(usuarioId: number) {
     try {
       if (this.isWeb) {
         await this.storageService.clearCart(usuarioId);
       } else {
         await this.SqliteDbService.clearCart(usuarioId);
       }
+      this.notificarCambioCarrito();
     } catch (error) {
       console.error('Error al limpiar carrito:', error);
       this.presentErrorAlert('No se pudo vaciar el carrito.');
@@ -167,17 +179,20 @@ export class UserDataService {
   }
 
   async removeFromCart(usuarioId: number, itemId: number) {
-    try {
-      if (this.isWeb) {
-        await this.storageService.removeFromCart(usuarioId, itemId);
-      } else {
-        await this.SqliteDbService.removeFromCart(itemId);
-      }
-    } catch (error) {
-      console.error('Error al eliminar del carrito:', error);
-      this.presentErrorAlert('No se pudo eliminar el juego del carrito.');
+  try {
+    if (this.isWeb) {
+      await this.storageService.removeFromCart(usuarioId, itemId);
+    } else {
+      await this.SqliteDbService.removeFromCart(itemId);
     }
+    this.notificarCambioCarrito();  // Notifica que hubo un cambio en el carrito
+  } catch (error) {
+    console.error('Error al eliminar del carrito:', error);
+    this.presentErrorAlert('No se pudo eliminar el juego del carrito.');
   }
+}
+
+
 
   async saveTransaction(usuarioId: number, codigo: string, juegos: any[]) {
     try {
@@ -194,11 +209,9 @@ export class UserDataService {
 
   async getTransactions(usuarioId: number) {
     try {
-      if (this.isWeb) {
-        return await this.storageService.getTransactions(usuarioId);
-      } else {
-        return await this.SqliteDbService.getTransactions(usuarioId);
-      }
+      return this.isWeb
+        ? await this.storageService.getTransactions(usuarioId)
+        : await this.SqliteDbService.getTransactions(usuarioId);
     } catch (error) {
       console.error('Error al obtener transacciones:', error);
       this.presentErrorAlert('No se pudieron obtener las transacciones.');
@@ -208,10 +221,7 @@ export class UserDataService {
 
   async saveSessionUser(user: any) {
     try {
-      if (!user.id) {
-        console.error('El usuario no tiene id:', user);
-        throw new Error('El usuario no tiene id');
-      }
+      if (!user.id) throw new Error('El usuario no tiene id');
 
       if (this.isWeb) {
         await this.storageService.saveSessionUser(user);
@@ -226,11 +236,9 @@ export class UserDataService {
 
   async getSessionUser() {
     try {
-      if (this.isWeb) {
-        return await this.storageService.getSessionUser();
-      } else {
-        return await this.SqliteDbService.getSessionUser();
-      }
+      return this.isWeb
+        ? await this.storageService.getSessionUser()
+        : await this.SqliteDbService.getSessionUser();
     } catch (error) {
       console.error('Error al obtener sesión:', error);
       this.presentErrorAlert('No se pudo recuperar la sesión del usuario.');
@@ -260,6 +268,7 @@ export class UserDataService {
         await this.SqliteDbService.setCart(usuarioId, carrito);
         this.carritoService.setCount(carrito.length);
       }
+      this.notificarCambioCarrito();
     } catch (error) {
       console.error('Error al actualizar carrito:', error);
       this.presentErrorAlert('No se pudo actualizar el carrito.');
