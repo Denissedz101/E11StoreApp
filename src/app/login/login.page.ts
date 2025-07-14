@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SessionService } from '../services/session.service';
 import { UserDataService } from '../services/user-data.service';
+import { AuthService } from '../services/auth.service'; 
 
 @Component({
   selector: 'app-login',
@@ -14,13 +15,15 @@ import { UserDataService } from '../services/user-data.service';
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
 
+
   constructor(
     private formBuilder: FormBuilder,
     private userDataService: UserDataService,
     private sessionService: SessionService,
     public router: Router,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -45,7 +48,7 @@ export class LoginPage implements OnInit {
 
   async onLogin() {
   if (!this.loginForm.valid) {
-    this.mostrarAlerta('Por favor completa todos los campos correctamente.');
+    this.mostrarAlerta('Por favor ingresa tus credenciales correctamente.');
     return;
   }
 
@@ -66,7 +69,9 @@ export class LoginPage implements OnInit {
     console.log('Usuario recuperado al hacer login:', user); 
     
     if (user && user.id) {
-      await this.sessionService.setActiveUser(user);  // Guardar el usuario con 'id'
+      // Usuario válido, iniciamos sesión
+      await this.authService.signIn(user);
+      await this.sessionService.saveSession(user);  
       console.log('✅ Sesión iniciada:', user);
       this.router.navigate(['/home']);
     } else {

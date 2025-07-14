@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotFoundPage } from './not-found.page';
+import { IonicStorageModule } from '@ionic/storage-angular';
+
 
 describe('NotFoundPage', () => {
   let component: NotFoundPage;

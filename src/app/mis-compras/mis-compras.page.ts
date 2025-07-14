@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { UserDataService } from '../services/user-data.service';
+import { CarritoService } from '../services/carrito.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mis-compras',
@@ -10,37 +12,56 @@ import { UserDataService } from '../services/user-data.service';
   styleUrls: ['./mis-compras.page.scss'],
   standalone: false
 })
-export class MisComprasPage implements OnInit {
+export class MisComprasPage implements OnInit, OnDestroy {
   carrito: any[] = [];
   total: number = 0;
   medioPago: string = 'debito';
   usuarioActivo: any = null;
+  carritoSub!: Subscription;
 
   usuario = {
-    direccion: 'Calle Ficticia 123, Santiago',
+    direccion: 'Calle Ficticia 123',
     telefono: '987654321',
     correo: 'cliente@email.com',
   };
 
   constructor(
-    private alertCtrl: AlertController,
     private alertController: AlertController,
     private sessionService: SessionService,
     private userDataService: UserDataService,
+    private carritoService: CarritoService,
     private router: Router,
+    private toastController: ToastController,
     private navCtrl: NavController
   ) {}
 
   async ngOnInit() {
-    this.usuarioActivo = await this.sessionService.getActiveUser();
+    this.usuarioActivo = await this.sessionService.getSession();
 
     if (!this.usuarioActivo) {
-      console.warn('🚫 No hay sesión activa, redirigiendo al login...');
       this.router.navigate(['/login']);
       return;
     }
 
-    this.usuario.correo = this.usuarioActivo.correo || this.usuario.correo;
+    this.usuario = {
+      direccion: this.usuarioActivo.direccion || 'Calle Ficticia 123',
+      telefono: this.usuarioActivo.telefono || '987654321',
+      correo: this.usuarioActivo.correo || 'cliente@email.com'
+    };
+
+    await this.cargarCarrito();
+
+    // Suscripción al cambio del carrito para actualizar la vista
+    this.carritoSub = this.userDataService.carritoActualizado$.subscribe(() => {
+      this.cargarCarrito();
+    });
+  }
+
+  ngOnDestroy() {
+    this.carritoSub?.unsubscribe();
+  }
+
+  async ionViewWillEnter() {
     await this.cargarCarrito();
   }
 
@@ -49,39 +70,62 @@ export class MisComprasPage implements OnInit {
       const carrito = await this.userDataService.getCart(this.usuarioActivo.id.toString());
       this.carrito = carrito;
       this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
+      this.carritoService.setCount(this.carrito.length);  // Actualiza el contador del carrito
     } catch (error) {
-      console.error('❌ Error al cargar carrito:', error);
       this.carrito = [];
       this.total = 0;
     }
   }
 
- async eliminarItem(item_id: string) {
-  try {
-    this.carrito = this.carrito.filter(item => item.id !== item_id);
-    await this.userDataService.setCart(this.usuarioActivo.id.toString(), this.carrito);
-    this.total = this.carrito.reduce((sum, item) => sum + item.precio, 0);
-  } catch (error) {
-    console.error('❌ Error al eliminar del carrito:', error);
+  // Elimina un item del carrito y actualiza la vista
+  async eliminarItem(itemId: number) {
+    try {
+      console.log('🗑 Eliminando item con ID:', itemId);
+
+      // Elimina el item del carrito
+      await this.userDataService.removeFromCart(this.usuarioActivo.id, itemId);
+
+      // Actualiza el carrito llamando a cargarCarrito nuevamente para reflejar los cambios en la vista
+      await this.cargarCarrito();
+
+      // Actualiza el contador de productos en el carrito
+      const carritoLength = this.carrito.length;
+      this.carritoService.setCount(carritoLength);  // Actualiza el contador de carrito
+    } catch (error) {
+      console.error('❌ Error al eliminar del carrito:', error);
+    }
   }
-}
 
-
+  // Finaliza la compra y limpia el carrito
   async finalizarCompra() {
-    const alert = await this.alertCtrl.create({
-      header: '¡Felicidades por tu compra!',
-      message: `Los detalles de la boleta llegarán a tu correo: <strong>${this.usuario.correo}</strong>.`,
-      buttons: ['OK'],
+    console.log('Compra realizada con éxito');
+    const toast = await this.toastController.create({
+      message: `🎉 ¡Felicidades por tu compra! Los detalles llegarán a: ${this.usuario.correo}`,
+      duration: 3000,
+      position: 'bottom',
+      color: 'success',
+      cssClass: 'toast-compra',
+      
     });
 
-    await alert.present();
+    await toast.present();
 
-    // Limpiar carrito después de la compra
+    // Limpiar carrito
     await this.userDataService.setCart(this.usuarioActivo.id.toString(), []);
+
+    // Actualiza vista local
     this.carrito = [];
     this.total = 0;
+
+    // ACTUALIZAR contador y notificar a otras vistas
+   this.userDataService.actualizarContadorCarrito(0);
+
+
+    this.router.navigate(['/home'], { replaceUrl: true });
   }
 
+
+  // Cierra la sesión del usuario
   async cerrarSesion() {
     const alert = await this.alertController.create({
       header: 'Cerrar sesión',

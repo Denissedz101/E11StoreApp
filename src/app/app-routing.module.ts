@@ -25,11 +25,13 @@ const routes: Routes = [
   },
   {
     path: 'mi-perfil',
-    loadChildren: () => import('./mi-perfil/mi-perfil.module').then( m => m.MiPerfilPageModule)
+    loadChildren: () => import('./mi-perfil/mi-perfil.module').then(m => m.MiPerfilPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'mis-compras',
-    loadChildren: () => import('./mis-compras/mis-compras.module').then( m => m.MisComprasPageModule)
+    loadChildren: () => import('./mis-compras/mis-compras.module').then(m => m.MisComprasPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',

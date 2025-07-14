@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { HomePage } from './home.page';
 
 describe('HomePage', () => {
@@ -9,9 +11,13 @@ describe('HomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HomePage],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+  declarations: [HomePage],
+  imports: [
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
+  ],
+  providers: [ provideHttpClient(), provideHttpClientTesting() ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
@@ -21,4 +27,5 @@ describe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

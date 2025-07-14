@@ -164,33 +164,38 @@ export class SqliteDbService {
         // Guardar sesión de usuario 
     async saveSessionUser(user: any): Promise<void> {
       try {
-        // Limpiar sesiones anteriores
         await this.db.run("DELETE FROM session_user");
-
         const stmt = `INSERT INTO session_user (usuario_id, nombre, correo) VALUES (?, ?, ?)`;
         await this.db.run(stmt, [user.id, user.nombre, user.correo]);
 
+        // sincronizar con AuthService
+        localStorage.setItem('session_active', 'true');
         console.log("🔐 Sesión guardada");
       } catch (err) {
         console.error("❌ Error guardando sesión:", err);
       }
     }
 
-    // Obtener usuario de sesión
+    // Obtener sesión
     async getSessionUser(): Promise<any | null> {
       try {
         const res = await this.db.query("SELECT * FROM session_user LIMIT 1");
-        return res.values?.length ? res.values[0] : null;
+        const sessionActive = localStorage.getItem('session_active');
+        if (!res.values?.length || sessionActive !== 'true') {
+          return null;
+        }
+        return res.values[0];
       } catch (err) {
         console.error("❌ Error obteniendo sesión:", err);
         return null;
       }
     }
 
-    // Cerrar sesión (eliminar)
+    // Cerrar sesión
     async clearSessionUser(): Promise<void> {
       try {
         await this.db.run("DELETE FROM session_user");
+        localStorage.removeItem('session_active');
         console.log("🚪 Sesión cerrada");
       } catch (err) {
         console.error("❌ Error cerrando sesión:", err);

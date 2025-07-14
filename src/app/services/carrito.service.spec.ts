@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
+import { IonicStorageModule } from '@ionic/storage-angular';
 import { CarritoService } from './carrito.service';
 
 describe('CarritoService', () => {

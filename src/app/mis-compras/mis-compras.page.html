@@ -44,7 +44,7 @@
         <h2>{{ item.titulo }}</h2>
         <p>Precio: ${{ item.precio }}</p>
       </ion-label>
-      <ion-button color="danger" slot="end" (click)="eliminarItem(item.id)">
+      <ion-button color="danger" slot="end" (click)="eliminarItem(item.id)" data-testid="btn-eliminar-item">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>
@@ -56,14 +56,22 @@
   </ion-list>
 
   <ng-template #emptyCart>
-    <ion-item>
-      <ion-label>No tienes juegos en el carrito.</ion-label>
-    </ion-item>
-  </ng-template>
+  <ion-item class="mensaje-vacio">
+    <ion-label data-testid="mensaje-vacio">No tienes juegos en el carrito.</ion-label>
+  </ion-item>
+</ng-template>
+
 </ion-content>
 
 <ion-footer *ngIf="carrito.length > 0">
   <ion-toolbar>
-    <ion-button expand="full" (click)="finalizarCompra()">Finalizar Compra</ion-button>
+    <ion-button
+      data-testid="btn-finalizar-compra"
+      expand="block"
+      color="success"
+      (click)="finalizarCompra()">
+      Finalizar Compra
+    </ion-button>
+
   </ion-toolbar>
 </ion-footer>

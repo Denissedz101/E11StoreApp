@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/services/session.service';
-
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -15,15 +15,17 @@ export class MiPerfilPage implements OnInit {
   usuario: any = {};
   editando: boolean = false;
 
+
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
     private router: Router,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private authService: AuthService,
   ) {}
 
   async ngOnInit() {
-    this.usuario = await this.sessionService.getActiveUser();
+    this.usuario = await this.sessionService.getSession();
   }
 
   async cerrarSesion() {
@@ -67,7 +69,7 @@ export class MiPerfilPage implements OnInit {
         return;
       }
 
-      await this.sessionService.setActiveUser(this.usuario);
+      await this.authService.signIn(this.usuario);
       this.editando = false;
 
       const toast = await this.toastController.create({
