@@ -15,20 +15,21 @@ describe('Agregar al carrito desde Home con data-testid', () => {
     });
   });
 
-  it('debe agregar un juego al carrito y reflejarlo en Mis Compras', () => {
+  it('debe agregar dos juegos al carrito y reflejarlos en Mis Compras', () => {
     // Espera que los juegos se carguen
-    cy.get('ion-card', { timeout: 10000 }).should('have.length.at.least', 1);
+    cy.get('ion-card', { timeout: 10000 }).should('have.length.at.least', 2);
 
-    // Click al botón "Añadir" usando data-testid
-    cy.get('[data-testid="btn-agregar-al-carrito"]').first().click();
+    // Agregar dos juegos diferentes (los dos primeros)
+    cy.get('[data-testid="btn-agregar-al-carrito"]').eq(0).click();
+    cy.get('[data-testid="btn-agregar-al-carrito"]').eq(1).click();
 
-    // Ir a /mis-compras
+    // Ir a Mis Compras
     cy.visit('/mis-compras');
 
-    // Verifica presencia del juego
-    cy.get('ion-list ion-item').should('contain.text', 'Precio:');
+    // Verificar que haya al menos dos items en la lista
+    cy.get('ion-list ion-item').should('have.length.at.least', 2);
 
-    // Verifica datos del usuario
+    // Verificar que los datos del usuario están visibles
     cy.get('ion-label').should('contain.text', 'Correo: admin@admin.cl');
     cy.get('ion-label').should('contain.text', 'Dirección:');
 

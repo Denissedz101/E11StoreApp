@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { UserDataService } from '../services/user-data.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-registro',
@@ -18,6 +19,7 @@ export class RegistroPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private userDataService: UserDataService,
+    private sessionService: SessionService,
     private alertCtrl: AlertController,
     private router: Router
   ) {}
@@ -83,6 +85,7 @@ export class RegistroPage implements OnInit {
 
     try {
       await this.userDataService.saveUser(datosFinales);
+      await this.sessionService.saveSession(datosFinales);  // ✅ guarda en sesión
       const alerta = await this.alertCtrl.create({
         header: '🎉 ¡Felicidades!',
         message: `

@@ -69,8 +69,9 @@ export class LoginPage implements OnInit {
     console.log('Usuario recuperado al hacer login:', user); 
     
     if (user && user.id) {
-      // Usuario válido, iniciar sesión
+      // Usuario válido, iniciamos sesión
       await this.authService.signIn(user);
+      await this.sessionService.saveSession(user);  
       console.log('✅ Sesión iniciada:', user);
       this.router.navigate(['/home']);
     } else {

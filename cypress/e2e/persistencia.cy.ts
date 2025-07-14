@@ -7,7 +7,7 @@ describe('Persistencia de sesión', () => {
   it('debe mantener la sesión al recargar', () => {
     cy.reload();
     cy.url().should('include', '/home');
-    cy.contains('Bienvenido, Admin').should('be.visible');
+    cy.contains('Hola, Admin').should('be.visible');
   });
 
 });

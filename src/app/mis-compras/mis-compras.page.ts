@@ -20,7 +20,7 @@ export class MisComprasPage implements OnInit, OnDestroy {
   carritoSub!: Subscription;
 
   usuario = {
-    direccion: 'Calle Ficticia 123, Santiago',
+    direccion: 'Calle Ficticia 123',
     telefono: '987654321',
     correo: 'cliente@email.com',
   };
@@ -43,7 +43,12 @@ export class MisComprasPage implements OnInit, OnDestroy {
       return;
     }
 
-    this.usuario.correo = this.usuarioActivo.correo || this.usuario.correo;
+    this.usuario = {
+      direccion: this.usuarioActivo.direccion || 'Calle Ficticia 123',
+      telefono: this.usuarioActivo.telefono || '987654321',
+      correo: this.usuarioActivo.correo || 'cliente@email.com'
+    };
+
     await this.cargarCarrito();
 
     // Suscripción al cambio del carrito para actualizar la vista

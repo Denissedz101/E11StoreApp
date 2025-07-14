@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: 'mi-perfil',
     loadChildren: () => import('./mi-perfil/mi-perfil.module').then(m => m.MiPerfilPageModule),
-   //canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'mis-compras',
