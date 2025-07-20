@@ -90,6 +90,15 @@ ion-card img {
   border-radius: 10px 10px 0 0;
 }
 
+/*animaciones al cargar*/
+ion-card img {
+  transition: transform 0.3s ease;
+}
+
+ion-card:hover img {
+  transform: scale(1.05);
+}
+
 ion-card-content {
   padding: 0.5rem;
 }

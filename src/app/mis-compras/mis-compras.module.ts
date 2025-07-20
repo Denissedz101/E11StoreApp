@@ -5,7 +5,7 @@ import { TopMenuModule } from '../components/top-menu/top-menu.module';
 import { IonicModule } from '@ionic/angular';
 import { MisComprasPageRoutingModule } from './mis-compras-routing.module';
 import { MisComprasPage } from './mis-compras.page';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 const isCypress = typeof window !== 'undefined' && !!window.Cypress;

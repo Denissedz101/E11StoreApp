@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { TopMenuModule } from '../components/top-menu/top-menu.module';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 // Detectar si estamos en Cypress

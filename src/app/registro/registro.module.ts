@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RegistroPageRoutingModule } from './registro-routing.module';
 import { RegistroPage } from './registro.page';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 const isCypress = typeof window !== 'undefined' && !!window.Cypress;

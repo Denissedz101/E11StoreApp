@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 const isCypress = typeof window !== 'undefined' && !!window.Cypress;

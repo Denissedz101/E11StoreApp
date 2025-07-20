@@ -8,7 +8,7 @@ import { MiPerfilPageRoutingModule } from './mi-perfil-routing.module';
 
 import { MiPerfilPage } from './mi-perfil.page';
 import { TopMenuModule } from '../components/top-menu/top-menu.module';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 const isCypress = typeof window !== 'undefined' && !!window.Cypress;

@@ -5,7 +5,7 @@ import { TopMenuModule } from '../components/top-menu/top-menu.module';
 import { IonicModule } from '@ionic/angular';
 import { ContactoPageRoutingModule } from './contacto-routing.module';
 import { ContactoPage } from './contacto.page';
-import { MockSessionService } from '../services/session.service.mock';
+import { MockSessionService } from '../mocks/mock-services';
 import { SessionService } from '../services/session.service';
 
 const isCypress = typeof window !== 'undefined' && !!window.Cypress;

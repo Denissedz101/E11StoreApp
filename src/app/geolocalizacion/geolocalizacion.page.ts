@@ -40,7 +40,7 @@ export class GeolocalizacionPage implements OnInit {
   async obtenerUbicacion() {
   try {
     if (Capacitor.getPlatform() === 'web') {
-      // Web fallback
+      // Web
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.latitud = position.coords.latitude;
@@ -52,7 +52,7 @@ export class GeolocalizacionPage implements OnInit {
         }
       );
     } else {
-      // Android/iOS con plugin
+      // Android 
       const position = await Geolocation.getCurrentPosition();
       this.latitud = position.coords.latitude;
       this.longitud = position.coords.longitude;
